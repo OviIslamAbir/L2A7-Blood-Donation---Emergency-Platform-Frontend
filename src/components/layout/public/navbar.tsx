@@ -1,7 +1,7 @@
-
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Heart, Menu, X } from "lucide-react";
 import { useState } from "react";
 
@@ -9,14 +9,15 @@ import { Logo } from "./logo";
 
 const navItems = [
   { label: "Home", href: "/" },
-  { label: "Find Donors", href: "/donors" },
-  { label: "Blood Requests", href: "/requests" },
-  { label: "About Us", href: "/about" },
+    { label: "About Us", href: "/about" },
+  { label: "Services", href: "/services" },
   { label: "FAQ", href: "/faq" },
+    { label: "Contact Us", href: "/contact" }
 ];
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/5 bg-[#07090d]/95 backdrop-blur-xl">
@@ -28,18 +29,30 @@ export function Navbar() {
 
         {/* Desktop Navigation */}
         <nav className="hidden items-center gap-7 md:flex">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="group relative py-2 text-sm font-medium text-zinc-300 transition-all duration-300 hover:text-white"
-            >
-              {item.label}
+          {navItems.map((item) => {
+            const isActive = pathname === item.href;
 
-              {/* Animated underline */}
-              <span className="absolute bottom-0 left-1/2 h-[2px] w-0 -translate-x-1/2 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.8)] transition-all duration-300 group-hover:w-full" />
-            </Link>
-          ))}
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`group relative py-2 text-sm font-medium transition-all duration-300 ${
+                  isActive
+                    ? "text-white font-semibold"
+                    : "text-zinc-400 hover:text-white"
+                }`}
+              >
+                {item.label}
+
+                {/* Animated & Active underline */}
+                <span
+                  className={`absolute bottom-0 left-1/2 h-[2px] -translate-x-1/2 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.8)] transition-all duration-300 ${
+                    isActive ? "w-full" : "w-0 group-hover:w-full"
+                  }`}
+                />
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Desktop Actions */}
@@ -64,7 +77,7 @@ export function Navbar() {
           </Link>
         </div>
 
-        {/* Mobile */}
+        {/* Mobile Toggle */}
         <div className="flex items-center md:hidden">
           <button
             type="button"
@@ -88,17 +101,25 @@ export function Navbar() {
         }`}
       >
         <nav className="mx-auto max-w-7xl px-4 py-5 sm:px-6">
-          <div className="flex flex-col gap-1">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className="rounded-xl px-4 py-3.5 text-sm font-semibold text-zinc-300 transition-all duration-300 hover:bg-red-500/10 hover:pl-6 hover:text-red-400"
-              >
-                {item.label}
-              </Link>
-            ))}
+          <div className="flex flex-col gap-1.5">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className={`rounded-xl px-4 py-3.5 text-sm font-semibold transition-all duration-300 ${
+                    isActive
+                      ? "border-l-2 border-red-500 bg-red-500/10 pl-5 text-red-400"
+                      : "text-zinc-300 hover:bg-red-500/10 hover:pl-6 hover:text-red-400"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </div>
 
           <div className="mt-4 flex flex-col gap-3 border-t border-white/5 pt-4">
@@ -124,4 +145,3 @@ export function Navbar() {
     </header>
   );
 }
-

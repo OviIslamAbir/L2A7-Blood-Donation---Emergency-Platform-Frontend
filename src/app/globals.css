@@ -1,55 +1,16 @@
 @import "tailwindcss";
 
-html {
-  scroll-behavior: smooth;
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+.dark {
+  --background: #09090b;
+  --foreground: #fafafa;
 }
 
 body {
-  overflow-x: hidden;
-}
-
-/* Smooth selection */
-::selection {
-  background: rgba(239, 68, 68, 0.2);
-}
-
-/* 3D hover utility */
-.hover-3d {
-  transform-style: preserve-3d;
-  transition:
-    transform 0.4s ease,
-    box-shadow 0.4s ease;
-}
-
-.hover-3d:hover {
-  transform: perspective(900px) rotateX(2deg) rotateY(-2deg)
-    translateY(-4px);
-}
-
-/* Floating animation */
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-8px);
-  }
-}
-
-.animate-float {
-  animation: float 4s ease-in-out infinite;
-}
-
-/* Reduce animation for accessibility */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
-  }
+  background: var(--background);
+  color: var(--foreground);
 }
