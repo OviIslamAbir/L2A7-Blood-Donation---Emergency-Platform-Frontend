@@ -1,13 +1,45 @@
-import Footer from "@/components/layout/public/Footer";
-import Header from "@/components/layout/public/Header";
-import { ReactNode } from "react";
+import { Footer } from "@/components/layout/public/footer";
+import { Navbar } from "@/components/layout/public/navbar";
+import { ThemeProvider } from "@/components/shared/theme-provider";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 
-export default function layout({ children }: { children: ReactNode }) {
+
+const inter = Inter({
+  subsets: ["latin"],
+});
+
+export const metadata: Metadata = {
+  title: {
+    default: "LifeDrop",
+    template: "%s | LifeDrop",
+  },
+  description:
+    "LifeDrop connects blood donors with people who urgently need blood.",
+  openGraph: {
+    title: "LifeDrop | Blood Donation & Emergency Platform",
+    description:
+      "Find blood donors and respond to emergency blood requests.",
+    type: "website",
+  },
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
-      <main className="flex-1">{children}</main>
-      <Footer />
-    </div>
+    <html lang="en">
+      <body className={`${inter.className} antialiased`}>
+
+          <Navbar />
+
+        <main>{children}</main>
+
+        <Footer />
+
+      </body>
+    </html>
   );
 }
