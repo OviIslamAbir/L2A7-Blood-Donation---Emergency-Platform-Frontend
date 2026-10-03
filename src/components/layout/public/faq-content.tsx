@@ -166,8 +166,6 @@ export default function FAQContent({ faqs }: { faqs: FAQ[] }) {
           {/* ================= FAQ ================= */}
           <section className="mt-14 sm:mt-16">
             <Accordion
-              type="single"
-              collapsible
               className="flex flex-col gap-4"
             >
               {faqs.map((faq, index) => (

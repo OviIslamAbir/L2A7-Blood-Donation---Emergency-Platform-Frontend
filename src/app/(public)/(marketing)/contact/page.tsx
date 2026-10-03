@@ -120,7 +120,7 @@ export default function ContactPage() {
 
         {particles.map((p, i) => (
           <motion.span
-            key={i}
+            key={`${p.pos}-${p.size}`}
             animate={{ y: [0, p.y, 0], opacity: [0.4, 1, 0.4] }}
             transition={{ duration: 4 + i * 0.6, delay: i * 0.5, ...loop }}
             className={`absolute rounded-full bg-red-500 shadow-[0_0_16px_rgba(239,68,68,0.8)] ${p.pos} ${p.size}`}

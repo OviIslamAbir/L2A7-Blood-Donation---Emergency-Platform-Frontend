@@ -1,6 +1,5 @@
 import { Footer } from "@/components/layout/public/footer";
 import { Navbar } from "@/components/layout/public/navbar";
-import { ThemeProvider } from "@/components/shared/theme-provider";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 

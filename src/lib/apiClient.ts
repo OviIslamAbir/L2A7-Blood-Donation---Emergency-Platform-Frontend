@@ -1,10 +1,20 @@
 import { ofetch } from "ofetch";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const BASE_URL = "https://blood-donation-system-puce.vercel.app/api/v1";
 
-const apiClient = ofetch.create({
-  baseURL: BASE_URL,
-  credentials: "include",
+export const apiClient = ofetch.create({
+	baseURL: BASE_URL,
+	credentials: "include",
+	async onRequest({ options }) {
+		if (typeof window !== "undefined") {
+			const token = localStorage.getItem("accessToken");
+			if (token) {
+				const headers = new Headers(options.headers);
+				headers.set("Authorization", `Bearer ${token}`);
+				options.headers = headers;
+			}
+		}
+	},
 });
 
 export default apiClient;

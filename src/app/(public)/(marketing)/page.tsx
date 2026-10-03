@@ -113,6 +113,7 @@ export default function HomePage() {
 
         {particles.map((p, i) => (
           <motion.span
+            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
             key={i}
             animate={{ y: [0, p.y, 0], opacity: [0.3, 1, 0.3] }}
             transition={{ duration: 4 + i * 0.6, delay: i * 0.4, ...loop }}
@@ -399,6 +400,7 @@ export default function HomePage() {
               <div className="mt-10 flex h-40 items-end gap-2">
                 {bars.map((h, i) => (
                   <motion.div
+                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                     key={i}
                     initial={{ height: 0 }}
                     whileInView={{ height: `${h}%` }}

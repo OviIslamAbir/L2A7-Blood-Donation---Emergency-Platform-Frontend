@@ -92,6 +92,7 @@ export default function ServicesPage() {
 
         {particles.map((p, i) => (
           <motion.span
+            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
             key={i}
             animate={{ y: [0, p.y, 0], opacity: [0.4, 1, 0.4] }}
             transition={{ duration: p.d, delay: i * 0.6, ...loop }}

@@ -102,13 +102,13 @@ export default function AboutPage() {
         <div className="absolute -bottom-52 left-[35%] h-[500px] w-[500px] rounded-full bg-red-500/5 blur-[140px]" />
 
         {[
-          { pos: "left-[12%] top-[20%]", size: "h-1.5 w-1.5", y: -16 },
-          { pos: "left-[82%] top-[16%]", size: "h-1 w-1", y: 14 },
-          { pos: "left-[72%] top-[52%]", size: "h-2 w-2", y: -20 },
-          { pos: "left-[18%] top-[68%]", size: "h-1.5 w-1.5", y: 18 },
+          { id: "top-left", pos: "left-[12%] top-[20%]", size: "h-1.5 w-1.5", y: -16 },
+          { id: "top-right", pos: "left-[82%] top-[16%]", size: "h-1 w-1", y: 14 },
+          { id: "middle-right", pos: "left-[72%] top-[52%]", size: "h-2 w-2", y: -20 },
+          { id: "bottom-left", pos: "left-[18%] top-[68%]", size: "h-1.5 w-1.5", y: 18 },
         ].map((p, i) => (
           <motion.span
-            key={i}
+            key={p.id}
             animate={{ y: [0, p.y, 0], opacity: [0.4, 1, 0.4] }}
             transition={{ duration: 4 + i, delay: i * 0.5, ...loop }}
             className={`absolute rounded-full bg-red-500 shadow-[0_0_16px_rgba(239,68,68,0.8)] ${p.pos} ${p.size}`}

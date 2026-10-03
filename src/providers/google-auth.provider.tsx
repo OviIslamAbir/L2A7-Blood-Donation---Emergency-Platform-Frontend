@@ -7,7 +7,7 @@ export default function GoogleAuthProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+  const clientId = "857382144519-1jmihe97jq0gu2l1t2pvk6nt1ic7hfub.apps.googleusercontent.com";
 
   return (
     <GoogleOAuthProvider clientId={clientId ?? ""}>

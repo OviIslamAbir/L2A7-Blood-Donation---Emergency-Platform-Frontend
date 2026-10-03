@@ -25,7 +25,7 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import GoogleLoginComponent from "@/components/modules/google-login/GoogleLogin";
 import { patientRegistrationSchema } from "@/validation";
-import { useRegistration } from "@/hooks";
+import { useRegister } from "@/hooks/auth.hook";
 
 type PatientRegistrationValues = z.infer<typeof patientRegistrationSchema>;
 
@@ -34,7 +34,7 @@ export function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const { mutate: registration, isPending } = useRegistration();
+  const { mutate: registration, isPending } = useRegister();
 
   const defaultValues: PatientRegistrationValues = {
     name: "",
@@ -50,30 +50,31 @@ export function RegisterForm() {
       onSubmit: patientRegistrationSchema,
     },
     onSubmit: async ({ value }) => {
-      const registrationData = {
-        name: value.name,
-        email: value.email,
-        password: value.password,
-        patient: {
-          contactNumber: value.contactNumber,
+      registration(
+        {
+          name: value.name,
+          email: value.email,
+          password: value.password,
+          requesterType: "INDIVIDUAL",
         },
-      };
+        {
+          onSuccess: (res) => {
+            if (res && res.success === false) {
+              toast.error(res.message || "Registration failed. Please try again.");
+              return;
+            }
 
-      registration(registrationData, {
-        onSuccess: (res) => {
-          if (!res.success) {
-            toast.error(res.message || "Registration failed. Please try again.");
-            return;
-          }
-
-          toast.success("Registration successful! Please verify your account.");
-          const params = new URLSearchParams({ email: registrationData.email });
-          router.push(`/register/verify-account?${params.toString()}`);
-        },
-        onError: (err) => {
-          toast.error(err.message || "Something went wrong. Please try again.");
-        },
-      });
+            toast.success(res.message || "Registration initiated! Please verify your email.");
+            const params = new URLSearchParams({ email: value.email });
+            router.push(`/register/verify-account?${params.toString()}`);
+          },
+          onError: (err: any) => {
+            const errorMessage =
+              err?.data?.message || err?.message || "Registration failed. Please try again.";
+            toast.error(errorMessage);
+          },
+        }
+      );
     },
   });
 

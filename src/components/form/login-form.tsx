@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
 import GoogleLoginComponent from "@/components/modules/google-login/GoogleLogin";
-import { useLogin } from "@/hooks";
+import { useLogin } from "@/hooks/auth.hook";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address."),
@@ -78,17 +78,23 @@ export default function LoginForm() {
   function authenticate(values: LoginValues) {
     login(values, {
       onSuccess: (response) => {
-        if (!response.success) {
+        if (response && response.success === false) {
           toast.error(response.message || "Login failed.");
           return;
+        }
+
+        if (response?.data?.accessToken) {
+          localStorage.setItem("accessToken", response.data.accessToken);
         }
 
         toast.success("Login successful.");
         router.push("/dashboard");
         router.refresh();
       },
-      onError: (error) => {
-        toast.error(error.message || "Unable to login.");
+      onError: (err: any) => {
+        const errorMessage =
+          err?.data?.message || err?.message || "Unable to login. Check credentials.";
+        toast.error(errorMessage);
       },
     });
   }
@@ -174,7 +180,7 @@ export default function LoginForm() {
             }}
           </form.Field>
 
-          {/* Password Field */}
+          {/* Password Field with Forgot Password Link */}
           <form.Field name="password">
             {(field) => {
               const invalid =
@@ -189,6 +195,13 @@ export default function LoginForm() {
                     >
                       Password
                     </FieldLabel>
+
+                    <Link
+                      href="/forgot-password"
+                      className="text-xs text-red-400 transition-colors hover:text-red-300 hover:underline"
+                    >
+                      Forgot password?
+                    </Link>
                   </div>
 
                   <div className="relative">
