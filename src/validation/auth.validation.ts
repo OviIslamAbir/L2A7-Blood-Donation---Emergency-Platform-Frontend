@@ -35,23 +35,15 @@ export const patientRegistrationSchema = z
     confirmPassword: z.string().min(1, "Please confirm your password"),
     contactNumber: z
       .string()
-      .refine((val) => val === "" || /^(?:\+?880|0)1[3-9]\d{8}$/.test(val), {
-        message: "Please provide valid Bangladeshi number",
-      })
+      .refine(
+        (val) => val === "" || /^(?:\+?880|880|0)1[3-9]\d{8}$/.test(val),
+        {
+          message: "Please provide valid Bangladeshi number",
+        },
+      )
       .optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Password do not match",
     path: ["confirmPassword"],
   });
-
-//* GP - 017, 013
-//* BL - 019, 014
-//* Airtel - 016
-//* Robi - 018
-//* TeleTalk - 01512345678
-//! City Cell - 011 (Already dead)
-//! there is no 012
-//todo we need to confirm from [3-9]
-
-//? Either +880, 880, 0
