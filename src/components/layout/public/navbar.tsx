@@ -10,6 +10,9 @@ import {
   LogOut,
   ChevronDown,
   User as UserIcon,
+  Shield,
+  HeartHandshake,
+  UserCheck,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -37,8 +40,27 @@ export function Navbar() {
     setMounted(true);
   }, []);
 
-  const tokenExists = mounted && typeof window !== "undefined" ? !!localStorage.getItem("accessToken") : false;
+  const tokenExists =
+    mounted && typeof window !== "undefined"
+      ? !!localStorage.getItem("accessToken")
+      : false;
   const showLoading = mounted && isLoading && tokenExists;
+
+  // Role-Based Dynamic Dashboard Link
+  const getDashboardHref = (role?: string) => {
+    switch (role) {
+      case "ADMIN":
+        return "/admin";
+      case "DONOR":
+        return "/dashboard";
+      case "REQUESTER":
+        return "/dashboard";
+      default:
+        return "/dashboard";
+    }
+  };
+
+  const dashboardHref = getDashboardHref(user?.role);
 
   const handleLogout = () => {
     setUserMenuOpen(false);
@@ -48,7 +70,7 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/5 bg-[#07090d]/95 backdrop-blur-xl">
-      {/* Top glow */}
+      {/* Top red glow line */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-500/60 to-transparent" />
 
       <div className="mx-auto flex h-[70px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -65,13 +87,12 @@ export function Navbar() {
                 href={item.href}
                 className={`group relative py-2 text-sm font-medium transition-all duration-300 ${
                   isActive
-                    ? "text-white font-semibold"
+                    ? "font-semibold text-white"
                     : "text-zinc-400 hover:text-white"
                 }`}
               >
                 {item.label}
 
-                {/* Animated & Active underline */}
                 <span
                   className={`absolute bottom-0 left-1/2 h-[2px] -translate-x-1/2 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.8)] transition-all duration-300 ${
                     isActive ? "w-full" : "w-0 group-hover:w-full"
@@ -90,13 +111,19 @@ export function Navbar() {
             <div className="h-10 w-28 animate-pulse rounded-xl bg-white/5" />
           ) : user ? (
             <div className="relative flex items-center gap-3">
-              {/* Dashboard Link */}
+              {/* Dynamic Dashboard Button Based on Role */}
               <Link
-                href="/dashboard"
-                className="flex items-center gap-2 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-2.5 text-sm font-semibold text-red-400 transition-all duration-300 hover:bg-red-500/20 hover:text-white shadow-[0_0_20px_rgba(239,68,68,0.15)]"
+                href={dashboardHref}
+                className="flex items-center gap-2 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-2.5 text-sm font-semibold text-red-400 shadow-[0_0_20px_rgba(239,68,68,0.15)] transition-all duration-300 hover:bg-red-500/20 hover:text-white"
               >
-                <LayoutDashboard className="h-4 w-4" />
-                <span>Dashboard</span>
+                {user.role === "ADMIN" ? (
+                  <Shield className="h-4 w-4 text-rose-400" />
+                ) : (
+                  <LayoutDashboard className="h-4 w-4" />
+                )}
+                <span>
+                  {user.role === "ADMIN" ? "Admin Panel" : "Dashboard"}
+                </span>
               </Link>
 
               {/* User Dropdown Menu */}
@@ -106,31 +133,48 @@ export function Navbar() {
                   onClick={() => setUserMenuOpen((prev) => !prev)}
                   className="flex items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 p-1.5 pr-3 transition-all duration-300 hover:border-red-500/30 hover:bg-white/10"
                 >
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-600 font-bold text-white uppercase text-xs shadow-md">
-                    {user.name ? user.name.charAt(0) : <UserIcon className="h-4 w-4" />}
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-red-600 to-rose-600 text-xs font-bold uppercase text-white shadow-md">
+                    {user.name ? (
+                      user.name.charAt(0)
+                    ) : (
+                      <UserIcon className="h-4 w-4" />
+                    )}
                   </div>
                   <span className="max-w-[110px] truncate text-sm font-medium text-zinc-200">
                     {user.name || "Account"}
                   </span>
-                  <ChevronDown className={`h-4 w-4 text-zinc-400 transition-transform duration-300 ${userMenuOpen ? "rotate-180" : ""}`} />
+                  <ChevronDown
+                    className={`h-4 w-4 text-zinc-400 transition-transform duration-300 ${
+                      userMenuOpen ? "rotate-180" : ""
+                    }`}
+                  />
                 </button>
 
                 {/* Dropdown Popup */}
                 {userMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-52 rounded-2xl border border-white/10 bg-[#0a0d14]/95 p-2 shadow-2xl backdrop-blur-2xl">
-                    <div className="px-3 py-2.5 border-b border-white/5">
-                      <p className="text-xs font-bold text-white truncate">{user.name}</p>
-                      <p className="text-[11px] text-zinc-400 truncate">{user.email}</p>
+                  <div className="absolute right-0 mt-2 w-56 rounded-2xl border border-white/10 bg-[#0a0d14]/95 p-2 shadow-2xl backdrop-blur-2xl">
+                    <div className="border-b border-white/5 px-3 py-2.5">
+                      <p className="truncate text-xs font-bold text-white">
+                        {user.name}
+                      </p>
+                      <p className="truncate text-[11px] text-zinc-400">
+                        {user.email}
+                      </p>
+                      <div className="mt-1.5">
+                        <span className="inline-block rounded-md border border-red-500/20 bg-red-500/10 px-2 py-0.5 text-[10px] font-bold text-red-400 uppercase">
+                          {user.role}
+                        </span>
+                      </div>
                     </div>
 
-                    <div className="pt-1.5 space-y-1">
+                    <div className="space-y-1 pt-1.5">
                       <Link
-                        href="/dashboard"
+                        href={dashboardHref}
                         onClick={() => setUserMenuOpen(false)}
                         className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-zinc-300 transition-colors hover:bg-white/5 hover:text-white"
                       >
                         <LayoutDashboard className="h-3.5 w-3.5 text-red-400" />
-                        Dashboard
+                        Dashboard Overview
                       </Link>
 
                       <button
@@ -161,7 +205,7 @@ export function Navbar() {
               >
                 <span className="absolute inset-y-0 -left-full w-1/2 skew-x-[-20deg] bg-gradient-to-r from-transparent via-white/30 to-transparent transition-all duration-700 group-hover:left-[130%]" />
 
-                <Heart className="relative h-4 w-4 fill-white transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" />
+                <Heart className="relative h-4 w-4 fill-white transition-transform duration-300 group-hover:rotate-12 group-hover:scale-125" />
 
                 <span className="relative">Join as Donor</span>
               </Link>
@@ -177,11 +221,7 @@ export function Navbar() {
             className="rounded-xl border border-white/10 bg-white/5 p-2.5 text-zinc-200 transition-all duration-300 hover:border-red-500/30 hover:bg-red-500/10 hover:text-white"
             aria-label="Toggle navigation"
           >
-            {open ? (
-              <X className="h-5 w-5" />
-            ) : (
-              <Menu className="h-5 w-5" />
-            )}
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
       </div>
@@ -218,22 +258,26 @@ export function Navbar() {
             {user ? (
               <>
                 <div className="flex items-center gap-3 px-2 py-1">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-600 font-bold text-white uppercase text-sm">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-600 text-sm font-bold uppercase text-white">
                     {user.name ? user.name.charAt(0) : "U"}
                   </div>
                   <div className="overflow-hidden">
-                    <p className="text-sm font-bold text-white truncate">{user.name}</p>
-                    <p className="text-xs text-zinc-400 truncate">{user.email}</p>
+                    <p className="truncate text-sm font-bold text-white">
+                      {user.name}
+                    </p>
+                    <p className="truncate text-xs text-zinc-400">
+                      {user.email}
+                    </p>
                   </div>
                 </div>
 
                 <Link
-                  href="/dashboard"
+                  href={dashboardHref}
                   onClick={() => setOpen(false)}
-                  className="flex items-center justify-center gap-2 rounded-xl bg-red-600/20 border border-red-500/30 py-3 text-sm font-bold text-red-400"
+                  className="flex items-center justify-center gap-2 rounded-xl border border-red-500/30 bg-red-600/20 py-3 text-sm font-bold text-red-400"
                 >
                   <LayoutDashboard className="h-4 w-4" />
-                  Go to Dashboard
+                  Go to {user.role === "ADMIN" ? "Admin Panel" : "Dashboard"}
                 </Link>
 
                 <button
