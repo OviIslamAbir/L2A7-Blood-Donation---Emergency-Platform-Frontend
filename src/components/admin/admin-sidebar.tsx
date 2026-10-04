@@ -13,6 +13,7 @@ import {
   ChevronRight,
   X,
   Menu,
+  FileText,
 } from "lucide-react";
 import { useState } from "react";
 import { useLogout } from "@/hooks/auth.hook";
@@ -37,7 +38,7 @@ const sidebarNavItems = [
     title: "Blood Requests",
     href: "/admin/blood-requests",
     icon: Droplets,
-  },
+  }
 ];
 
 export default function AdminSidebar() {
@@ -60,9 +61,11 @@ export default function AdminSidebar() {
 
       {/* Mobile Backdrop Overlay */}
       {mobileOpen && (
-        <div
+        <button
+          type="button"
+          aria-label="Close navigation menu"
           onClick={() => setMobileOpen(false)}
-          className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm lg:hidden"
+          className="fixed inset-0 z-40 border-0 bg-black/70 p-0 backdrop-blur-sm lg:hidden"
         />
       )}
 
@@ -74,10 +77,7 @@ export default function AdminSidebar() {
       >
         {/* Brand Header */}
         <div className="flex h-[70px] items-center border-b border-white/5 px-6">
-          <Link
-            href="/"
-            className="flex items-center gap-3 transition hover:opacity-90"
-          >
+          <Link href="/" className="flex items-center gap-3 transition hover:opacity-90">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-red-500/30 bg-red-600/20 shadow-[0_0_20px_rgba(239,68,68,0.3)]">
               <ShieldCheck className="h-5 w-5 text-red-500" />
             </div>
@@ -86,7 +86,7 @@ export default function AdminSidebar() {
               <span className="text-base font-black tracking-wider text-white">
                 Life<span className="text-red-500">Drop</span>
               </span>
-              <span className="ml-1.5 rounded bg-red-500/10 px-1.5 py-0.5 text-[9px] font-bold text-red-400 uppercase border border-red-500/20">
+              <span className="ml-1.5 border border-red-500/20 bg-red-500/10 px-1.5 py-0.5 text-[9px] font-bold uppercase text-red-400 rounded">
                 Admin
               </span>
             </div>
@@ -120,17 +120,13 @@ export default function AdminSidebar() {
                 <div className="flex items-center gap-3">
                   <Icon
                     className={`h-4 w-4 transition-colors ${
-                      isActive
-                        ? "text-red-400"
-                        : "text-zinc-500 group-hover:text-zinc-300"
+                      isActive ? "text-red-400" : "text-zinc-500 group-hover:text-zinc-300"
                     }`}
                   />
                   <span>{item.title}</span>
                 </div>
 
-                {isActive && (
-                  <ChevronRight className="h-4 w-4 text-red-400" />
-                )}
+                {isActive && <ChevronRight className="h-4 w-4 text-red-400" />}
               </Link>
             );
           })}
@@ -149,7 +145,7 @@ export default function AdminSidebar() {
           <button
             type="button"
             onClick={() => logout()}
-            className="flex w-full items-center gap-3 rounded-xl border border-red-500/20 bg-red-500/5 px-3.5 py-2.5 text-xs font-semibold text-red-400 transition hover:bg-red-500/15 hover:text-red-300"
+            className="flex w-full items-center gap-3 rounded-xl border border-red-500/20 bg-red-500/5 px-3.5 py-2.5 text-xs font-semibold text-red-400 transition hover:bg-red-500/15"
           >
             <LogOut className="h-4 w-4" />
             <span>Logout Admin</span>

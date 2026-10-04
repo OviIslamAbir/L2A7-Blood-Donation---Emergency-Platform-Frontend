@@ -98,9 +98,16 @@ export default function AdminDashboardPage() {
       {/* Loading Skeleton */}
       {isLoading ? (
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {Array.from({ length: 6 }).map((_, index) => (
+          {[
+            "users",
+            "donors",
+            "requests",
+            "applications",
+            "donations",
+            "overview",
+          ].map((cardKey) => (
             <div
-              key={index}
+              key={cardKey}
               className="h-32 animate-pulse rounded-2xl border border-white/10 bg-[#0a0d14]/70"
             />
           ))}
