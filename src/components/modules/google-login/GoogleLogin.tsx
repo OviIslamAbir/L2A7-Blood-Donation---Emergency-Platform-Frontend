@@ -3,38 +3,14 @@
 import { GoogleLogin } from "@react-oauth/google";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-
+import { useQueryClient } from "@tanstack/react-query";
+import apiClient from "@/lib/apiClient"; // আপনার configured apiClient
 
 export default function GoogleLoginComponent() {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
-  const googleLogin = async (
-    variables: { idToken: string },
-    callbacks: {
-      onSuccess: (res: { success: boolean; message?: unknown; data?: { accessToken: string } }) => void;
-      onError: (err: unknown) => void;
-    }
-  ) => {
-    try {
-      const response = await fetch("/api/auth/google", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(variables),
-      });
-      const result = await response.json();
-
-      if (!response.ok) {
-        callbacks.onError(result);
-        return;
-      }
-
-      callbacks.onSuccess(result);
-    } catch (error) {
-      callbacks.onError(error);
-    }
-  };
-
-  const handleGoogleSuccess = (credentialResponse: { credential?: string }) => {
+  const handleGoogleSuccess = async (credentialResponse: { credential?: string }) => {
     const idToken = credentialResponse.credential;
 
     if (!idToken) {
@@ -42,33 +18,46 @@ export default function GoogleLoginComponent() {
       return;
     }
 
-    googleLogin(
-      { idToken },
-      {
-        onSuccess: (res: { success: boolean; message?: unknown; data?: { accessToken: string } }) => {
-          if (res && res.success === false) {
-            toast.error(
-              typeof res.message === "string"
-                ? res.message
-                : "Google OAuth authentication failed."
-            );
-            return;
-          }
+    try {
+      // Direct apiClient call pointing to Vercel Express backend (/auth/google)
+      const res: any = await apiClient("/auth/google", {
+        method: "POST",
+        body: { idToken },
+      });
 
-          if (res?.data?.accessToken) {
-            localStorage.setItem("accessToken", res.data.accessToken);
-          }
-
-          toast.success("Login successful! Welcome back.");
-          router.push("/dashboard");
-          router.refresh();
-        },
-        onError: (err: any) => {
-          const errorMessage = err?.data?.message || err?.message || "Google OAuth login failed. Please try again.";
-          toast.error(errorMessage);
-        },
+      if (res && res.success === false) {
+        toast.error(
+          typeof res.message === "string"
+            ? res.message
+            : "Google OAuth authentication failed."
+        );
+        return;
       }
-    );
+
+      // Save token if returned
+      if (res?.data?.accessToken) {
+        localStorage.setItem("accessToken", res.data.accessToken);
+        queryClient.invalidateQueries({ queryKey: ["me"] });
+      }
+
+      toast.success("Login successful! Welcome back.");
+
+      // Dynamic Role-based Redirect
+      const role = res?.data?.user?.role;
+      if (role === "ADMIN") {
+        router.push("/admin");
+      } else if (role === "DONOR") {
+        router.push("/donor");
+      } else {
+        router.push("/apply-donor");
+      }
+
+      router.refresh();
+    } catch (err: any) {
+      const errorMessage =
+        err?.data?.message || err?.message || "Google OAuth login failed. Please try again.";
+      toast.error(errorMessage);
+    }
   };
 
   const handleGoogleError = () => {
@@ -76,12 +65,14 @@ export default function GoogleLoginComponent() {
   };
 
   return (
-    <GoogleLogin
-      theme="outline"
-      shape="pill"
-      text="continue_with"
-      onSuccess={handleGoogleSuccess}
-      onError={handleGoogleError}
-    />
+    <div className="flex justify-center w-full">
+      <GoogleLogin
+        theme="outline"
+        shape="pill"
+        text="continue_with"
+        onSuccess={handleGoogleSuccess}
+        onError={handleGoogleError}
+      />
+    </div>
   );
 }

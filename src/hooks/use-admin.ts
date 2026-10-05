@@ -82,14 +82,18 @@ export const useDonorApplications = () => {
   });
 };
 
-// PATCH /admin/donor/:userId/approve
+/// PATCH /admin/donor/:userId/approve
 export const useApproveDonor = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (userId: string) => {
-      return apiClient<ApiResponse<AdminUser>>(`/admin/donor/${userId}/approve`, { method: "PATCH" });
+      return apiClient<ApiResponse<AdminUser>>(`/admin/donor/${userId}/approve`, {
+        method: "PATCH",
+      });
     },
     onSuccess: () => {
+      // Invalidate all admin queries to immediately update UI
       queryClient.invalidateQueries({ queryKey: adminKeys.all });
     },
   });
@@ -98,8 +102,15 @@ export const useApproveDonor = () => {
 // PATCH /admin/donor/:userId/reject
 export const useRejectDonor = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: async ({ userId, payload }: { userId: string; payload: { reason?: string } }) => {
+    mutationFn: async ({
+      userId,
+      payload,
+    }: {
+      userId: string;
+      payload: { reason?: string };
+    }) => {
       return apiClient<ApiResponse<AdminUser>>(`/admin/donor/${userId}/reject`, {
         method: "PATCH",
         body: payload,

@@ -12,7 +12,7 @@ import {
   User as UserIcon,
   Shield,
   HeartHandshake,
-  UserCheck,
+  Sparkles,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -46,21 +46,32 @@ export function Navbar() {
       : false;
   const showLoading = mounted && isLoading && tokenExists;
 
-  // Role-Based Dynamic Dashboard Link
-  const getDashboardHref = (role?: string) => {
+  const getRoleAction = (role?: string) => {
     switch (role) {
       case "ADMIN":
-        return "/admin";
+        return {
+          label: "Admin Panel",
+          href: "/admin",
+          icon: Shield,
+        };
       case "DONOR":
-        return "/dashboard";
+        return {
+          label: "Donor Panel",
+          href: "/donor",
+          icon: LayoutDashboard,
+        };
       case "REQUESTER":
-        return "/dashboard";
       default:
-        return "/dashboard";
+        return {
+          label: "Apply for Donor",
+          href: "/apply-donor",
+          icon: HeartHandshake,
+        };
     }
   };
 
-  const dashboardHref = getDashboardHref(user?.role);
+  const actionInfo = getRoleAction(user?.role);
+  const ActionIcon = actionInfo.icon;
 
   const handleLogout = () => {
     setUserMenuOpen(false);
@@ -70,13 +81,12 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/5 bg-[#07090d]/95 backdrop-blur-xl">
-      {/* Top red glow line */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-500/60 to-transparent" />
 
       <div className="mx-auto flex h-[70px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Logo />
 
-        {/* Desktop Navigation */}
+        {/* Desktop Nav */}
         <nav className="hidden items-center gap-7 md:flex">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
@@ -103,7 +113,7 @@ export function Navbar() {
           })}
         </nav>
 
-        {/* Desktop Actions */}
+        {/* Actions */}
         <div className="hidden items-center gap-3 md:flex">
           {!mounted ? (
             <div className="h-10 w-28 rounded-xl bg-white/5 opacity-50" />
@@ -111,22 +121,14 @@ export function Navbar() {
             <div className="h-10 w-28 animate-pulse rounded-xl bg-white/5" />
           ) : user ? (
             <div className="relative flex items-center gap-3">
-              {/* Dynamic Dashboard Button Based on Role */}
               <Link
-                href={dashboardHref}
-                className="flex items-center gap-2 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-2.5 text-sm font-semibold text-red-400 shadow-[0_0_20px_rgba(239,68,68,0.15)] transition-all duration-300 hover:bg-red-500/20 hover:text-white"
+                href={actionInfo.href}
+                className="flex items-center gap-2 rounded-xl border border-red-500/30 bg-gradient-to-r from-red-600/20 to-rose-600/10 px-4 py-2.5 text-xs font-bold text-red-400 shadow-[0_0_20px_rgba(239,68,68,0.15)] transition-all duration-300 hover:border-red-500/50 hover:bg-red-500/20 hover:text-white"
               >
-                {user.role === "ADMIN" ? (
-                  <Shield className="h-4 w-4 text-rose-400" />
-                ) : (
-                  <LayoutDashboard className="h-4 w-4" />
-                )}
-                <span>
-                  {user.role === "ADMIN" ? "Admin Panel" : "Dashboard"}
-                </span>
+                <ActionIcon className="h-4 w-4 text-red-400" />
+                <span>{actionInfo.label}</span>
               </Link>
 
-              {/* User Dropdown Menu */}
               <div className="relative">
                 <button
                   type="button"
@@ -134,13 +136,9 @@ export function Navbar() {
                   className="flex items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 p-1.5 pr-3 transition-all duration-300 hover:border-red-500/30 hover:bg-white/10"
                 >
                   <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-red-600 to-rose-600 text-xs font-bold uppercase text-white shadow-md">
-                    {user.name ? (
-                      user.name.charAt(0)
-                    ) : (
-                      <UserIcon className="h-4 w-4" />
-                    )}
+                    {user.name ? user.name.charAt(0) : <UserIcon className="h-4 w-4" />}
                   </div>
-                  <span className="max-w-[110px] truncate text-sm font-medium text-zinc-200">
+                  <span className="max-w-[110px] truncate text-xs font-semibold text-zinc-200">
                     {user.name || "Account"}
                   </span>
                   <ChevronDown
@@ -150,9 +148,8 @@ export function Navbar() {
                   />
                 </button>
 
-                {/* Dropdown Popup */}
                 {userMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-56 rounded-2xl border border-white/10 bg-[#0a0d14]/95 p-2 shadow-2xl backdrop-blur-2xl">
+                  <div className="absolute right-0 mt-2 w-56 rounded-2xl border border-white/10 bg-[#0a0d14]/95 p-2 shadow-2xl backdrop-blur-2xl z-50">
                     <div className="border-b border-white/5 px-3 py-2.5">
                       <p className="truncate text-xs font-bold text-white">
                         {user.name}
@@ -161,7 +158,7 @@ export function Navbar() {
                         {user.email}
                       </p>
                       <div className="mt-1.5">
-                        <span className="inline-block rounded-md border border-red-500/20 bg-red-500/10 px-2 py-0.5 text-[10px] font-bold text-red-400 uppercase">
+                        <span className="inline-block rounded-md border border-red-500/20 bg-red-500/10 px-2 py-0.5 text-[10px] font-bold uppercase text-red-400">
                           {user.role}
                         </span>
                       </div>
@@ -169,7 +166,13 @@ export function Navbar() {
 
                     <div className="space-y-1 pt-1.5">
                       <Link
-                        href={dashboardHref}
+                        href={
+                          user.role === "ADMIN"
+                            ? "/admin"
+                            : user.role === "DONOR"
+                            ? "/donor"
+                            : "/apply-donor"
+                        }
                         onClick={() => setUserMenuOpen(false)}
                         className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-zinc-300 transition-colors hover:bg-white/5 hover:text-white"
                       >
@@ -177,10 +180,21 @@ export function Navbar() {
                         Dashboard Overview
                       </Link>
 
+                      {user.role === "REQUESTER" && (
+                        <Link
+                          href="/apply-donor"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-amber-400 transition-colors hover:bg-amber-500/10"
+                        >
+                          <Sparkles className="h-3.5 w-3.5" />
+                          Apply for Donor
+                        </Link>
+                      )}
+
                       <button
                         type="button"
                         onClick={handleLogout}
-                        className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-red-400 transition-colors hover:bg-red-500/10"
+                        className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-rose-400 transition-colors hover:bg-rose-500/10"
                       >
                         <LogOut className="h-3.5 w-3.5" />
                         Logout
@@ -194,20 +208,17 @@ export function Navbar() {
             <>
               <Link
                 href="/login"
-                className="rounded-xl px-4 py-2.5 text-sm font-semibold text-zinc-300 transition-all duration-300 hover:bg-white/5 hover:text-white"
+                className="rounded-xl px-4 py-2.5 text-xs font-semibold text-zinc-300 transition-all duration-300 hover:bg-white/5 hover:text-white"
               >
                 Login
               </Link>
 
               <Link
-                href="/register"
-                className="group relative flex items-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-red-600 to-rose-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-red-600/20 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-xl hover:shadow-red-600/30"
+                href="/apply-donor"
+                className="group relative flex items-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-red-600 to-rose-600 px-5 py-2.5 text-xs font-bold text-white shadow-lg shadow-red-600/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-red-600/30"
               >
-                <span className="absolute inset-y-0 -left-full w-1/2 skew-x-[-20deg] bg-gradient-to-r from-transparent via-white/30 to-transparent transition-all duration-700 group-hover:left-[130%]" />
-
-                <Heart className="relative h-4 w-4 fill-white transition-transform duration-300 group-hover:rotate-12 group-hover:scale-125" />
-
-                <span className="relative">Join as Donor</span>
+                <Heart className="h-3.5 w-3.5 fill-white transition-transform duration-300 group-hover:scale-125" />
+                <span>Join as Donor</span>
               </Link>
             </>
           )}
@@ -226,7 +237,7 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Drawer */}
       <div
         className={`overflow-hidden border-t border-white/5 bg-[#07090d]/98 backdrop-blur-xl transition-all duration-500 md:hidden ${
           open ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
@@ -242,7 +253,7 @@ export function Navbar() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setOpen(false)}
-                  className={`rounded-xl px-4 py-3.5 text-sm font-semibold transition-all duration-300 ${
+                  className={`rounded-xl px-4 py-3 text-xs font-semibold transition-all duration-300 ${
                     isActive
                       ? "border-l-2 border-red-500 bg-red-500/10 pl-5 text-red-400"
                       : "text-zinc-300 hover:bg-red-500/10 hover:pl-6 hover:text-red-400"
@@ -258,32 +269,32 @@ export function Navbar() {
             {user ? (
               <>
                 <div className="flex items-center gap-3 px-2 py-1">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-600 text-sm font-bold uppercase text-white">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-600 text-xs font-bold uppercase text-white">
                     {user.name ? user.name.charAt(0) : "U"}
                   </div>
                   <div className="overflow-hidden">
-                    <p className="truncate text-sm font-bold text-white">
+                    <p className="truncate text-xs font-bold text-white">
                       {user.name}
                     </p>
-                    <p className="truncate text-xs text-zinc-400">
+                    <p className="truncate text-[10px] text-zinc-400">
                       {user.email}
                     </p>
                   </div>
                 </div>
 
                 <Link
-                  href={dashboardHref}
+                  href={actionInfo.href}
                   onClick={() => setOpen(false)}
-                  className="flex items-center justify-center gap-2 rounded-xl border border-red-500/30 bg-red-600/20 py-3 text-sm font-bold text-red-400"
+                  className="flex items-center justify-center gap-2 rounded-xl border border-red-500/30 bg-red-600/20 py-3 text-xs font-bold text-red-400"
                 >
-                  <LayoutDashboard className="h-4 w-4" />
-                  Go to {user.role === "ADMIN" ? "Admin Panel" : "Dashboard"}
+                  <ActionIcon className="h-4 w-4" />
+                  {actionInfo.label}
                 </Link>
 
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] py-3 text-sm font-semibold text-red-400 hover:bg-red-500/10"
+                  className="flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] py-3 text-xs font-semibold text-rose-400 hover:bg-rose-500/10"
                 >
                   <LogOut className="h-4 w-4" />
                   Logout
@@ -294,15 +305,15 @@ export function Navbar() {
                 <Link
                   href="/login"
                   onClick={() => setOpen(false)}
-                  className="rounded-xl border border-white/10 bg-white/[0.03] py-3 text-center text-sm font-semibold text-zinc-300 transition-all hover:bg-white/5 hover:text-white"
+                  className="rounded-xl border border-white/10 bg-white/[0.03] py-3 text-center text-xs font-semibold text-zinc-300 hover:text-white"
                 >
                   Login
                 </Link>
 
                 <Link
-                  href="/register"
+                  href="/apply-donor"
                   onClick={() => setOpen(false)}
-                  className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 py-3 text-sm font-bold text-white shadow-lg shadow-red-600/20"
+                  className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 py-3 text-xs font-bold text-white shadow-lg shadow-red-600/20"
                 >
                   <Heart className="h-4 w-4 fill-white" />
                   Join as Donor
