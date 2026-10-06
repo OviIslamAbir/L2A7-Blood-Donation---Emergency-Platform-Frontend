@@ -1,7 +1,8 @@
 "use client";
 
 import { useDonorApplicationStatus } from "@/hooks/use-donor";
-import { Droplets, ShieldCheck, Clock, Bell, User as UserIcon } from "lucide-react";
+import { NotificationPopover } from "@/components/modules/notification/NotificationPopover";
+import { Droplets, ShieldCheck, Clock, User as UserIcon } from "lucide-react";
 
 export default function DonorHeader() {
   const { data: statusData } = useDonorApplicationStatus();
@@ -17,6 +18,11 @@ export default function DonorHeader() {
       </div>
 
       <div className="flex items-center gap-4">
+        {/* 🔥 Notification Popover (Added Here) */}
+        <NotificationPopover />
+
+        <div className="h-4 w-px bg-white/10" />
+
         {/* Donor Status Badge */}
         {role === "DONOR" ? (
           <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-[11px] font-bold text-emerald-400">
@@ -31,8 +37,6 @@ export default function DonorHeader() {
             <Droplets className="h-3.5 w-3.5" /> REQUESTER
           </span>
         )}
-
-        <div className="h-4 w-px bg-white/10" />
 
         {/* Profile Avatar */}
         <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-red-600 to-rose-600 text-xs font-black text-white shadow-md">
