@@ -62,6 +62,7 @@ export default function DonorMatchesPage() {
         <AlertCircle className="h-8 w-8 text-rose-500 mb-2" />
         <p className="text-sm font-bold text-white">Failed to load matches</p>
         <button
+          type="button"
           onClick={() => refetch()}
           className="mt-3 rounded-xl bg-white/10 px-4 py-2 text-xs font-bold text-white hover:bg-white/20"
         >
@@ -100,7 +101,7 @@ export default function DonorMatchesPage() {
         /* Matches Grid */
         <div className="grid gap-4 md:grid-cols-2">
           {matches.map((match) => {
-            const req = match.request;
+            const req = match.request as any;
             const isCritical = req?.urgency === "CRITICAL";
 
             return (

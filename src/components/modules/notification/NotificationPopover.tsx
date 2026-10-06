@@ -73,20 +73,23 @@ export function NotificationPopover() {
               notifications.map((item: any) => (
                 <div
                   key={item.id}
-                  onClick={() => handleMarkSingleRead(item.id, item.isRead)}
-                  className={`group relative flex cursor-pointer items-start justify-between rounded-xl border p-3 text-xs transition ${
+                  className={`group relative flex items-start justify-between rounded-xl border p-3 text-xs transition ${
                     item.isRead
-                      ? "border-white/5 bg-white/[0.02] text-zinc-400"
+                      ? "border-white/5 bg-white/2 text-zinc-400"
                       : "border-red-500/20 bg-red-500/5 text-white font-medium"
                   }`}
                 >
-                  <div className="space-y-0.5 pr-4">
+                  <button
+                    type="button"
+                    onClick={() => handleMarkSingleRead(item.id, item.isRead)}
+                    className="flex-1 cursor-pointer space-y-0.5 pr-4 text-left"
+                  >
                     <p className="font-bold">{item.title}</p>
                     <p className="text-[11px] text-zinc-400">{item.message}</p>
                     <p className="text-[9px] text-zinc-500">
                       {new Date(item.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </p>
-                  </div>
+                  </button>
 
                   <button
                     type="button"

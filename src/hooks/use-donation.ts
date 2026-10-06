@@ -6,7 +6,7 @@ import type {
   IDonation,
   ICreateDonationPayload,
   IUpdateDonationPayload,
-} from "@/types/donation.type";
+} from "@/types/donaion.type";
 
 export const donationKeys = {
   all: ["donations"] as const,

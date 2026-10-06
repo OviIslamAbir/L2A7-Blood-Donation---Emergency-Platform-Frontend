@@ -1,4 +1,4 @@
-import FAQContent from "@/components/layout/public/faq-content";
+import FAQContent from "@/components/public/faq-content";
 import type { Metadata } from "next";
 
 
