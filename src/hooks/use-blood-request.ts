@@ -8,8 +8,16 @@ import type {
   IBloodRequest,
 } from "@/types/blood-request.type";
 
+export const bloodRequestKeys = {
+  all: ["blood-requests"] as const,
+  myRequests: () => [...bloodRequestKeys.all, "my-requests"] as const,
+  single: (id: string) => [...bloodRequestKeys.all, "single", id] as const,
+};
+
+// 1. POST /blood-requests (Create Blood Request)
 export const useCreateBloodRequest = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (payload: ICreateBloodRequestPayload) => {
       return await apiClient<any>("/blood-requests", {
@@ -18,23 +26,70 @@ export const useCreateBloodRequest = () => {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["my-blood-requests"] });
+      queryClient.invalidateQueries({ queryKey: bloodRequestKeys.all });
     },
   });
 };
 
+// 2. GET /blood-requests/my-requests (Get Requester's Blood Requests)
 export const useGetMyBloodRequests = () => {
   return useQuery({
-    queryKey: ["my-blood-requests"],
+    queryKey: bloodRequestKeys.myRequests(),
     queryFn: async () => {
-      const res = await apiClient<any>("/blood-requests/my-requests", { method: "GET" });
-      return (res?.data?.requests || res?.requests || []) as IBloodRequest[];
+      const response = await apiClient<any>("/blood-requests/my-requests", {
+        method: "GET",
+      });
+      return (
+        response?.requests ||
+        response?.data?.requests ||
+        response?.data ||
+        []
+      ) as IBloodRequest[];
     },
   });
 };
 
+// 3. GET /blood-requests/:id (Get Single Blood Request)
+export const useGetSingleBloodRequest = (requestId: string) => {
+  return useQuery({
+    queryKey: bloodRequestKeys.single(requestId),
+    queryFn: async () => {
+      const response = await apiClient<any>(`/blood-requests/${requestId}`, {
+        method: "GET",
+      });
+      return (response?.data || response) as IBloodRequest;
+    },
+    enabled: !!requestId,
+  });
+};
+
+// 4. PATCH /blood-requests/:id (Update Pending Blood Request)
+export const useUpdateBloodRequest = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      id,
+      payload,
+    }: {
+      id: string;
+      payload: IUpdateBloodRequestPayload;
+    }) => {
+      return await apiClient<any>(`/blood-requests/${id}`, {
+        method: "PATCH",
+        body: payload,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: bloodRequestKeys.all });
+    },
+  });
+};
+
+// 5. PATCH /blood-requests/:id/cancel (Cancel Pending Blood Request)
 export const useCancelBloodRequest = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (requestId: string) => {
       return await apiClient<any>(`/blood-requests/${requestId}/cancel`, {
@@ -42,7 +97,24 @@ export const useCancelBloodRequest = () => {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["my-blood-requests"] });
+      queryClient.invalidateQueries({ queryKey: bloodRequestKeys.all });
+    },
+  });
+};
+
+// 6. POST /donor-matches/match/:requestId (Trigger Donor Matching Service)
+export const useMatchDonorsForRequest = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (requestId: string) => {
+      return await apiClient<any>(`/donor-matches/match/${requestId}`, {
+        method: "POST",
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: bloodRequestKeys.all });
+      queryClient.invalidateQueries({ queryKey: ["donor-matches"] });
     },
   });
 };

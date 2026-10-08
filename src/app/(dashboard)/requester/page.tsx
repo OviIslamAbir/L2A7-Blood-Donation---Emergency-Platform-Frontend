@@ -7,7 +7,6 @@ import {
   PlusCircle,
   HeartHandshake,
   CreditCard,
-  Droplets,
   ArrowRight,
   Clock,
   ShieldCheck,

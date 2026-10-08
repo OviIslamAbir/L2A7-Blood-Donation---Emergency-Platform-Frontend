@@ -46,6 +46,7 @@ export function Navbar() {
       : false;
   const showLoading = mounted && isLoading && tokenExists;
 
+  // FIX: REQUESTER role er jonno default href path/route thik kora hoilo
   const getRoleAction = (role?: string) => {
     switch (role) {
       case "ADMIN":
@@ -61,6 +62,11 @@ export function Navbar() {
           icon: LayoutDashboard,
         };
       case "REQUESTER":
+        return {
+          label: "Requester Portal",
+          href: "/requester",
+          icon: HeartHandshake,
+        };
       default:
         return {
           label: "Apply for Donor",
@@ -165,13 +171,14 @@ export function Navbar() {
                     </div>
 
                     <div className="space-y-1 pt-1.5">
+                      {/* FIX: Dashboard Overview link-er correct role handling */}
                       <Link
                         href={
                           user.role === "ADMIN"
                             ? "/admin"
                             : user.role === "DONOR"
                             ? "/donor"
-                            : "/apply-donor"
+                            : "/requester"
                         }
                         onClick={() => setUserMenuOpen(false)}
                         className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-semibold text-zinc-300 transition-colors hover:bg-white/5 hover:text-white"

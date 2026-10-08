@@ -2,10 +2,20 @@
 
 import { useState } from "react";
 import { useCreateBloodRequest } from "@/hooks/use-blood-request";
-import type { BloodGroup, Urgency } from "@/types/blood-request.type";
+import type { Urgency } from "@/types/blood-request.type";
 import { useRouter } from "next/navigation";
 import { HeartPulse, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+
+type BloodGroup =
+  | "A_POSITIVE"
+  | "A_NEGATIVE"
+  | "B_POSITIVE"
+  | "B_NEGATIVE"
+  | "AB_POSITIVE"
+  | "AB_NEGATIVE"
+  | "O_POSITIVE"
+  | "O_NEGATIVE";
 
 export default function CreateBloodRequestPage() {
   const router = useRouter();
@@ -53,10 +63,11 @@ export default function CreateBloodRequestPage() {
         className="space-y-4 rounded-2xl border border-white/10 bg-[#0a0d14] p-6"
       >
         <div>
-          <label className="text-xs font-semibold text-zinc-400">
+          <label htmlFor="patientName" className="text-xs font-semibold text-zinc-400">
             Patient Full Name *
           </label>
           <input
+            id="patientName"
             required
             type="text"
             value={formData.patientName}
@@ -70,10 +81,11 @@ export default function CreateBloodRequestPage() {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="text-xs font-semibold text-zinc-400">
+            <label htmlFor="bloodGroup" className="text-xs font-semibold text-zinc-400">
               Required Blood Group *
             </label>
             <select
+              id="bloodGroup"
               value={formData.bloodGroup}
               onChange={(e) =>
                 setFormData({
@@ -101,10 +113,11 @@ export default function CreateBloodRequestPage() {
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-zinc-400">
+            <label htmlFor="units" className="text-xs font-semibold text-zinc-400">
               Units / Bags *
             </label>
             <input
+              id="units"
               required
               type="number"
               min={1}
@@ -119,10 +132,11 @@ export default function CreateBloodRequestPage() {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="text-xs font-semibold text-zinc-400">
+            <label htmlFor="hospitalName" className="text-xs font-semibold text-zinc-400">
               Hospital Name *
             </label>
             <input
+              id="hospitalName"
               required
               type="text"
               value={formData.hospitalName}
@@ -135,10 +149,11 @@ export default function CreateBloodRequestPage() {
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-zinc-400">
+            <label htmlFor="hospitalAddress" className="text-xs font-semibold text-zinc-400">
               Hospital Address *
             </label>
             <input
+              id="hospitalAddress"
               required
               type="text"
               value={formData.hospitalAddress}
@@ -153,10 +168,11 @@ export default function CreateBloodRequestPage() {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="text-xs font-semibold text-zinc-400">
+            <label htmlFor="urgency" className="text-xs font-semibold text-zinc-400">
               Urgency
             </label>
             <select
+              id="urgency"
               value={formData.urgency}
               onChange={(e) =>
                 setFormData({
@@ -173,10 +189,11 @@ export default function CreateBloodRequestPage() {
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-zinc-400">
+            <label htmlFor="neededAt" className="text-xs font-semibold text-zinc-400">
               Needed Date
             </label>
             <input
+              id="neededAt"
               type="date"
               value={formData.neededAt}
               onChange={(e) =>
@@ -188,10 +205,11 @@ export default function CreateBloodRequestPage() {
         </div>
 
         <div>
-          <label className="text-xs font-semibold text-zinc-400">
+          <label htmlFor="reason" className="text-xs font-semibold text-zinc-400">
             Medical Reason / Notes
           </label>
           <textarea
+            id="reason"
             rows={3}
             value={formData.reason}
             onChange={(e) =>
