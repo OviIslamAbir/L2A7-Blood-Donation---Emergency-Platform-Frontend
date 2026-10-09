@@ -25,21 +25,25 @@ export default function CheckoutModal({
   if (!isOpen) return null;
 
   const handlePayment = () => {
+    // 500 BDT Standard Emergency Assistance Fee
     createPaymentMutation.mutate(
       { requestId, amount: 500, provider },
       {
         onSuccess: (res: any) => {
-          toast.success("Redirecting to secure gateway...");
-          const checkoutUrl =
+          toast.success("Redirecting to payment gateway...");
+          
+          // Extracts redirect URL for both bKash and Stripe
+          const redirectUrl =
             res?.checkoutUrl ||
             res?.bkashUrl ||
             res?.data?.checkoutUrl ||
             res?.data?.bkashUrl;
 
-          if (checkoutUrl) {
-            window.location.href = checkoutUrl;
+          if (redirectUrl) {
+            // Redirects user to bKash or Stripe secure portal
+            window.location.href = redirectUrl;
           } else {
-            toast.error("Payment redirect URL missing.");
+            toast.error("Payment redirect URL missing from server.");
           }
         },
         onError: (err: any) => {
@@ -50,8 +54,9 @@ export default function CheckoutModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-md">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-md">
       <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[#0a0d14] p-6 shadow-2xl">
+        {/* Header */}
         <div className="flex items-center justify-between border-b border-white/10 pb-4">
           <h3 className="text-base font-bold text-white">
             Emergency Assistance Fee
@@ -65,29 +70,28 @@ export default function CheckoutModal({
           </button>
         </div>
 
-        <div className="my-4 space-y-3">
+        {/* Content */}
+        <div className="my-5 space-y-4">
           <p className="text-xs text-zinc-400">
-            Emergency processing fee to find verified donors for{" "}
+            Assistance fee for donor matching & emergency notification dispatch for{" "}
             <strong className="text-white">{patientName}</strong>.
           </p>
 
-          <div className="rounded-xl border border-white/5 bg-white/5 p-4 text-center">
-            <span className="text-2xl font-black text-red-500">500 BDT</span>
+          <div className="rounded-xl border border-red-500/20 bg-red-500/10 p-4 text-center">
+            <span className="text-xs font-bold uppercase tracking-wider text-red-400">
+              Total Payable Amount
+            </span>
+            <h2 className="mt-1 text-3xl font-black text-white">500 BDT</h2>
           </div>
 
-          <div className="space-y-2 pt-2">
-            <p className="text-xs font-semibold text-zinc-400">
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-zinc-400">
               Select Payment Gateway
-            </p>
-            <div
-              className="grid grid-cols-2 gap-3"
-              role="radiogroup"
-              aria-label="Payment provider"
-            >
+            </label>
+            <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
                 onClick={() => setProvider("BKASH")}
-                aria-pressed={provider === "BKASH"}
                 className={`flex items-center justify-center gap-2 rounded-xl border p-3 text-xs font-bold transition ${
                   provider === "BKASH"
                     ? "border-pink-500 bg-pink-500/10 text-pink-400"
@@ -100,7 +104,6 @@ export default function CheckoutModal({
               <button
                 type="button"
                 onClick={() => setProvider("STRIPE")}
-                aria-pressed={provider === "STRIPE"}
                 className={`flex items-center justify-center gap-2 rounded-xl border p-3 text-xs font-bold transition ${
                   provider === "STRIPE"
                     ? "border-blue-500 bg-blue-500/10 text-blue-400"
@@ -113,11 +116,12 @@ export default function CheckoutModal({
           </div>
         </div>
 
+        {/* Submit */}
         <button
           type="button"
           onClick={handlePayment}
           disabled={createPaymentMutation.isPending}
-          className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 py-3 text-xs font-bold text-white shadow-lg shadow-red-600/30 hover:brightness-110 disabled:opacity-50"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 py-3.5 text-xs font-bold text-white shadow-lg shadow-red-600/30 transition hover:brightness-110 disabled:opacity-50"
         >
           {createPaymentMutation.isPending ? (
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -126,8 +130,8 @@ export default function CheckoutModal({
           )}
           <span>
             {createPaymentMutation.isPending
-              ? "Connecting..."
-              : "Pay Now & Match Donors"}
+              ? "Connecting Gateway..."
+              : `Pay 500 BDT with ${provider}`}
           </span>
         </button>
       </div>
