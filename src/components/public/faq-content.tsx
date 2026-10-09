@@ -12,7 +12,7 @@ import {
 
 type FAQ = { question: string; answer: string };
 
-/* ---------------- Variants ---------------- */
+
 const heroContainer: Variants = {
   hidden: {},
   show: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
@@ -40,12 +40,12 @@ export default function FAQContent({ faqs }: { faqs: FAQ[] }) {
   return (
     <MotionConfig reducedMotion="user">
       <main className="relative min-h-screen overflow-hidden bg-[#05070a] text-white selection:bg-red-500 selection:text-white">
-        {/* ================= BACKGROUND ================= */}
+
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          {/* Grid */}
+
           <div className="absolute inset-0 opacity-[0.035] [background-image:linear-gradient(rgba(255,255,255,0.8)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.8)_1px,transparent_1px)] [background-size:55px_55px]" />
 
-          {/* Main glow */}
+
           <motion.div
             style={{ x: "-50%" }}
             animate={{ opacity: [0.65, 1, 0.65], scale: [1, 1.08, 1] }}
@@ -53,11 +53,11 @@ export default function FAQContent({ faqs }: { faqs: FAQ[] }) {
             className="absolute left-1/2 top-[-260px] h-[650px] w-[900px] rounded-full bg-red-600/[0.09] blur-[150px]"
           />
 
-          {/* Side glow */}
+
           <div className="absolute -left-40 top-[40%] h-[450px] w-[450px] rounded-full bg-red-700/[0.05] blur-[140px]" />
           <div className="absolute -right-40 bottom-[5%] h-[500px] w-[500px] rounded-full bg-rose-600/[0.05] blur-[150px]" />
 
-          {/* Floating particles */}
+
           <motion.span
             animate={{ y: [0, -18, 0], opacity: [0.45, 1, 0.45] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -89,7 +89,7 @@ export default function FAQContent({ faqs }: { faqs: FAQ[] }) {
         </div>
 
         <div className="relative mx-auto max-w-5xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
-          {/* ================= HERO ================= */}
+
           <motion.section
             variants={heroContainer}
             initial="hidden"
@@ -124,7 +124,7 @@ export default function FAQContent({ faqs }: { faqs: FAQ[] }) {
               </span>
             </motion.h1>
 
-            {/* Description */}
+
             <motion.p
               variants={heroItem}
               className="mx-auto mt-6 max-w-xl text-base leading-8 text-zinc-500 sm:text-lg"
@@ -133,7 +133,6 @@ export default function FAQContent({ faqs }: { faqs: FAQ[] }) {
               notifications, security, and the LifeDrop platform.
             </motion.p>
 
-            {/* Decorative line */}
             <motion.div
               variants={heroItem}
               className="mx-auto mt-8 flex items-center justify-center gap-3"
@@ -163,7 +162,7 @@ export default function FAQContent({ faqs }: { faqs: FAQ[] }) {
             </motion.div>
           </motion.section>
 
-          {/* ================= FAQ ================= */}
+
           <section className="mt-14 sm:mt-16">
             <Accordion
               className="flex flex-col gap-4"
@@ -203,23 +202,23 @@ export default function FAQContent({ faqs }: { faqs: FAQ[] }) {
                       sm:px-6
                     "
                   >
-                    {/* Left active indicator */}
+                    
                     <div className="pointer-events-none absolute bottom-0 left-0 top-0 w-[2px] origin-bottom scale-y-0 bg-gradient-to-t from-red-600 via-rose-500 to-transparent transition-transform duration-500 group-data-[state=open]:scale-y-100" />
 
-                    {/* Active glow */}
+                    
                     <div className="pointer-events-none absolute -right-24 -top-24 h-40 w-40 rounded-full bg-red-500/0 blur-3xl transition-all duration-700 group-data-[state=open]:bg-red-500/10" />
 
                     <AccordionTrigger className="relative py-6 pr-2 text-left text-base font-bold text-zinc-200 transition-colors duration-300 hover:text-red-400 hover:no-underline sm:text-lg [&>svg]:hidden">
                       <div className="flex w-full items-center gap-4">
-                        {/* Number */}
+                       
                         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.025] text-[11px] font-bold text-zinc-600 transition-all duration-500 group-data-[state=open]:border-red-500/25 group-data-[state=open]:bg-red-500/10 group-data-[state=open]:text-red-400">
                           {String(index + 1).padStart(2, "0")}
                         </span>
 
-                        {/* Question */}
+                       
                         <span className="flex-1">{faq.question}</span>
 
-                        {/* Plus */}
+                        
                         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.025] text-zinc-500 transition-all duration-500 group-data-[state=open]:rotate-45 group-data-[state=open]:border-red-500/30 group-data-[state=open]:bg-red-500/10 group-data-[state=open]:text-red-400">
                           <Plus className="h-4 w-4" />
                         </span>
@@ -237,7 +236,7 @@ export default function FAQContent({ faqs }: { faqs: FAQ[] }) {
             </Accordion>
           </section>
 
-          {/* ================= BOTTOM ================= */}
+
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}

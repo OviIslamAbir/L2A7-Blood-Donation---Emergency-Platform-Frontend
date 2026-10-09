@@ -32,7 +32,6 @@ export default function AdminHeader({
       <div className="flex items-center gap-3">
         {action}
 
-        {/* User Badge */}
         <div className="hidden items-center gap-3 rounded-2xl border border-white/10 bg-[#0a0d14] px-3.5 py-2 sm:flex">
           <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-red-500/30 bg-red-600/20 text-red-400">
             <Shield className="h-4 w-4" />

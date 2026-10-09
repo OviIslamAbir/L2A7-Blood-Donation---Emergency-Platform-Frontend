@@ -19,12 +19,11 @@ export const apiClient = ofetch.create({
   async onResponseError({ response }) {
     const data = response._data;
 
-    // 💡 HTML Page / 404 Route Error
+  
     if (typeof data === "string" && data.includes("<!DOCTYPE")) {
       throw new Error("Backend endpoint not found (404) or server error.");
     }
 
-    // 💡 Extract exact backend error message (matches Postman response JSON)
     const backendMessage =
       data?.message ||
       data?.errorSources?.[0]?.message ||

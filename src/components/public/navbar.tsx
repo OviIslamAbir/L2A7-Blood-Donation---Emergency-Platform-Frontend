@@ -46,7 +46,7 @@ export function Navbar() {
       : false;
   const showLoading = mounted && isLoading && tokenExists;
 
-  // FIX: REQUESTER role er jonno default href path/route thik kora hoilo
+
   const getRoleAction = (role?: string) => {
     switch (role) {
       case "ADMIN":
@@ -92,7 +92,7 @@ export function Navbar() {
       <div className="mx-auto flex h-[70px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Logo />
 
-        {/* Desktop Nav */}
+
         <nav className="hidden items-center gap-7 md:flex">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
@@ -119,7 +119,7 @@ export function Navbar() {
           })}
         </nav>
 
-        {/* Actions */}
+
         <div className="hidden items-center gap-3 md:flex">
           {!mounted ? (
             <div className="h-10 w-28 rounded-xl bg-white/5 opacity-50" />
@@ -171,7 +171,7 @@ export function Navbar() {
                     </div>
 
                     <div className="space-y-1 pt-1.5">
-                      {/* FIX: Dashboard Overview link-er correct role handling */}
+                    
                       <Link
                         href={
                           user.role === "ADMIN"
@@ -231,7 +231,6 @@ export function Navbar() {
           )}
         </div>
 
-        {/* Mobile Toggle */}
         <div className="flex items-center md:hidden">
           <button
             type="button"
@@ -244,7 +243,7 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Drawer */}
+
       <div
         className={`overflow-hidden border-t border-white/5 bg-[#07090d]/98 backdrop-blur-xl transition-all duration-500 md:hidden ${
           open ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"

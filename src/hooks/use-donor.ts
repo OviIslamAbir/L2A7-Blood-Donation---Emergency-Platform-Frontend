@@ -12,7 +12,7 @@ export const donorKeys = {
   applicationStatus: () => [...donorKeys.all, "application-status"] as const,
 };
 
-// GET /donor/profile
+
 export function useDonorProfile() {
   return useQuery({
     queryKey: donorKeys.profile(),
@@ -23,7 +23,7 @@ export function useDonorProfile() {
   });
 }
 
-// GET /donor/application-status
+
 export function useDonorApplicationStatus() {
   return useQuery({
     queryKey: donorKeys.applicationStatus(),
@@ -34,7 +34,6 @@ export function useDonorApplicationStatus() {
   });
 }
 
-// POST /auth/apply-donor
 export function useApplyForDonor() {
   const queryClient = useQueryClient();
 
@@ -50,8 +49,6 @@ export function useApplyForDonor() {
     },
   });
 }
-
-// PATCH /donor/profile
 export function useUpdateDonorProfile() {
   const queryClient = useQueryClient();
 

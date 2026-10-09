@@ -54,7 +54,7 @@ export default function EditRequestModal({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // 💡 Fix: Clean payload to match backend Zod & Prisma expectation
+
     const cleanedPayload: IUpdateBloodRequestPayload = {
       patientName: formData.patientName.trim(),
       bloodGroup: formData.bloodGroup,
@@ -101,8 +101,11 @@ export default function EditRequestModal({
 
         <form onSubmit={handleSubmit} className="my-4 space-y-4">
           <div>
-            <label className="text-xs font-semibold text-zinc-400">Patient Name</label>
+            <label htmlFor="patientName" className="text-xs font-semibold text-zinc-400">
+              Patient Name
+            </label>
             <input
+              id="patientName"
               required
               type="text"
               value={formData.patientName}
@@ -113,8 +116,11 @@ export default function EditRequestModal({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-semibold text-zinc-400">Blood Group</label>
+              <label htmlFor="bloodGroup" className="text-xs font-semibold text-zinc-400">
+                Blood Group
+              </label>
               <select
+                id="bloodGroup"
                 value={formData.bloodGroup}
                 onChange={(e) =>
                   setFormData({ ...formData, bloodGroup: e.target.value as BloodGroup })
@@ -139,8 +145,9 @@ export default function EditRequestModal({
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-zinc-400">Units / Bags</label>
+              <label htmlFor="units" className="text-xs font-semibold text-zinc-400">Units / Bags</label>
               <input
+                id="units"
                 required
                 type="number"
                 min={1}
@@ -153,8 +160,9 @@ export default function EditRequestModal({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-semibold text-zinc-400">Hospital Name</label>
+              <label htmlFor="hospitalName" className="text-xs font-semibold text-zinc-400">Hospital Name</label>
               <input
+                id="hospitalName"
                 required
                 type="text"
                 value={formData.hospitalName}
@@ -164,8 +172,9 @@ export default function EditRequestModal({
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-zinc-400">Hospital Address</label>
+              <label htmlFor="hospitalAddress" className="text-xs font-semibold text-zinc-400">Hospital Address</label>
               <input
+                id="hospitalAddress"
                 required
                 type="text"
                 value={formData.hospitalAddress}
@@ -177,8 +186,9 @@ export default function EditRequestModal({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-semibold text-zinc-400">Urgency</label>
+              <label htmlFor="urgency" className="text-xs font-semibold text-zinc-400">Urgency</label>
               <select
+                id="urgency"
                 value={formData.urgency}
                 onChange={(e) =>
                   setFormData({ ...formData, urgency: e.target.value as Urgency })
@@ -192,8 +202,9 @@ export default function EditRequestModal({
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-zinc-400">Needed Date</label>
+              <label htmlFor="neededAt" className="text-xs font-semibold text-zinc-400">Needed Date</label>
               <input
+                id="neededAt"
                 type="date"
                 value={formData.neededAt}
                 onChange={(e) => setFormData({ ...formData, neededAt: e.target.value })}
@@ -203,8 +214,9 @@ export default function EditRequestModal({
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-zinc-400">Reason</label>
+            <label htmlFor="reason" className="text-xs font-semibold text-zinc-400">Reason</label>
             <textarea
+              id="reason"
               rows={2}
               value={formData.reason}
               onChange={(e) => setFormData({ ...formData, reason: e.target.value })}

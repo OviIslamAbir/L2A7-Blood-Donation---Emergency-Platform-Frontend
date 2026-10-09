@@ -23,7 +23,7 @@ export default function MatchedDonorsModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-md">
       <div className="flex max-h-[85vh] w-full max-w-2xl flex-col rounded-2xl border border-white/10 bg-[#0a0d14] p-6 shadow-2xl">
-        {/* Modal Header */}
+
         <div className="flex items-center justify-between border-b border-white/10 pb-4">
           <div>
             <h3 className="text-base font-bold text-white">
@@ -42,7 +42,6 @@ export default function MatchedDonorsModal({
           </button>
         </div>
 
-        {/* Modal Content */}
         <div className="my-4 flex-1 overflow-y-auto space-y-3 pr-1">
           {isLoading ? (
             <div className="flex h-40 flex-col items-center justify-center space-y-2">
@@ -112,7 +111,6 @@ export default function MatchedDonorsModal({
           )}
         </div>
 
-        {/* Modal Footer */}
         <div className="border-t border-white/10 pt-4 text-right">
           <button
             type="button"

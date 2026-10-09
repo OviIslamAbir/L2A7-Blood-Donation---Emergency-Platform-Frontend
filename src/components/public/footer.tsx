@@ -25,17 +25,16 @@ const companyLinks = [
 export function Footer() {
   return (
     <footer className="relative overflow-hidden border-t border-white/5 bg-[#06080c] text-zinc-300">
-      {/* 3D ambient glow */}
+
       <div className="pointer-events-none absolute -left-40 top-10 h-96 w-96 rounded-full bg-red-600/10 blur-[120px]" />
 
       <div className="pointer-events-none absolute -right-40 bottom-0 h-96 w-96 rounded-full bg-rose-600/10 blur-[120px]" />
 
-      {/* Grid */}
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:40px_40px]" />
 
       <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-5">
-          {/* Brand */}
+
           <div className="lg:col-span-2">
             <Link
               href="/"
@@ -57,7 +56,7 @@ export function Footer() {
               voluntary donors with patients during critical moments.
             </p>
 
-            {/* Newsletter */}
+
             <div className="mt-7 max-w-md">
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-500">
                 Stay Updated
@@ -80,7 +79,7 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Platform */}
+
           <div>
             <h3 className="mb-5 text-xs font-bold uppercase tracking-[0.2em] text-white">
               Platform
@@ -102,7 +101,7 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Company */}
+  
           <div>
             <h3 className="mb-5 text-xs font-bold uppercase tracking-[0.2em] text-white">
               Company
@@ -124,7 +123,6 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Emergency */}
           <div>
             <h3 className="mb-5 text-xs font-bold uppercase tracking-[0.2em] text-white">
               Emergency Support
@@ -175,7 +173,7 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Bottom */}
+
       <div className="relative border-t border-white/5 bg-black/20">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-6 text-xs text-zinc-600 sm:flex-row sm:px-6 lg:px-8">
           <p>

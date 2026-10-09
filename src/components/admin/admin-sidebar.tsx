@@ -1,7 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   ClipboardList,
@@ -13,10 +14,11 @@ import {
   ChevronRight,
   X,
   Menu,
-  FileText,
+  User as UserIcon,
 } from "lucide-react";
-import { useState } from "react";
-import { useLogout } from "@/hooks/auth.hook";
+import { toast } from "sonner";
+
+import { useGetMe, useLogout } from "@/hooks/auth.hook";
 
 const sidebarNavItems = [
   {
@@ -38,17 +40,39 @@ const sidebarNavItems = [
     title: "Blood Requests",
     href: "/admin/blood-requests",
     icon: Droplets,
-  }
+  },
 ];
 
 export default function AdminSidebar() {
   const pathname = usePathname();
-  const { mutate: logout } = useLogout();
+  const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const { data: user } = useGetMe();
+  const { mutate: logout, isPending } = useLogout();
+
+  const handleLogout = () => {
+    logout(undefined, {
+      onSuccess: () => {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        toast.success("Logged out successfully.");
+        router.push("/login");
+        router.refresh();
+      },
+      onError: (err: any) => {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        toast.error(err?.message || "Logged out.");
+        router.push("/login");
+        router.refresh();
+      },
+    });
+  };
 
   return (
     <>
-      {/* Mobile Top Bar Toggle Button */}
+      {/* Mobile Toggle Button */}
       <div className="fixed top-3 left-4 z-50 flex items-center gap-2 lg:hidden">
         <button
           type="button"
@@ -69,40 +93,44 @@ export default function AdminSidebar() {
         />
       )}
 
-      {/* Unified Sidebar Container */}
+      {/* Sidebar Container */}
       <aside
-        className={`fixed bottom-0 top-0 z-40 flex w-64 flex-col border-r border-white/10 bg-[#07090d]/95 backdrop-blur-2xl transition-transform duration-300 lg:static lg:translate-x-0 ${
+        className={`fixed bottom-0 top-0 z-40 flex w-64 flex-col border-r border-white/10 bg-[#0a0d14]/90 backdrop-blur-xl transition-transform duration-300 lg:static lg:translate-x-0 ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         {/* Brand Header */}
-        <div className="flex h-[70px] items-center border-b border-white/5 px-6">
-          <Link href="/" className="flex items-center gap-3 transition hover:opacity-90">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-red-500/30 bg-red-600/20 shadow-[0_0_20px_rgba(239,68,68,0.3)]">
-              <ShieldCheck className="h-5 w-5 text-red-500" />
+        <div className="flex h-16 items-center border-b border-white/5 px-6">
+          <Link
+            href="/"
+            className="flex items-center gap-3 transition hover:opacity-90"
+          >
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-red-500/30 bg-gradient-to-br from-red-600 to-rose-600 shadow-lg shadow-red-600/30">
+              <ShieldCheck className="h-5 w-5 text-white" />
             </div>
 
             <div>
-              <span className="text-base font-black tracking-wider text-white">
+              <h2 className="text-sm font-black tracking-wide text-white">
                 Life<span className="text-red-500">Drop</span>
-              </span>
-              <span className="ml-1.5 border border-red-500/20 bg-red-500/10 px-1.5 py-0.5 text-[9px] font-bold uppercase text-red-400 rounded">
-                Admin
-              </span>
+              </h2>
+              <p className="text-[10px] font-semibold text-zinc-500">
+                ADMIN PANEL
+              </p>
             </div>
           </Link>
         </div>
 
-        {/* Navigation Items */}
-        <div className="flex-1 space-y-1.5 px-3 py-6">
+        {/* Main Navigation */}
+        <div className="flex-1 space-y-1 p-4">
           <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-zinc-500">
             Main Menu
           </p>
 
           {sidebarNavItems.map((item) => {
             const isActive =
-              pathname === item.href ||
-              (item.href !== "/admin" && pathname.startsWith(item.href));
+              item.href === "/admin"
+                ? pathname === "/admin"
+                : pathname?.startsWith(item.href);
 
             const Icon = item.icon;
 
@@ -111,44 +139,57 @@ export default function AdminSidebar() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
-                className={`group relative flex items-center justify-between rounded-xl px-3.5 py-3 text-sm font-semibold transition-all duration-300 ${
+                className={`flex items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-bold transition duration-200 ${
                   isActive
-                    ? "border border-red-500/30 bg-red-500/10 text-white shadow-[0_0_20px_rgba(239,68,68,0.1)]"
+                    ? "bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-lg shadow-red-600/20"
                     : "text-zinc-400 hover:bg-white/5 hover:text-white"
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <Icon
-                    className={`h-4 w-4 transition-colors ${
-                      isActive ? "text-red-400" : "text-zinc-500 group-hover:text-zinc-300"
-                    }`}
-                  />
+                  <Icon className="h-4 w-4" />
                   <span>{item.title}</span>
                 </div>
 
-                {isActive && <ChevronRight className="h-4 w-4 text-red-400" />}
+                {isActive && <ChevronRight className="h-3.5 w-3.5 opacity-80" />}
               </Link>
             );
           })}
         </div>
 
-        {/* Bottom Actions */}
-        <div className="space-y-2 border-t border-white/5 p-3">
+        {/* Bottom Actions & User Profile */}
+        <div className="border-t border-white/5 p-4 space-y-3">
           <Link
             href="/"
-            className="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-zinc-400 transition hover:bg-white/5 hover:text-white"
+            className="flex items-center gap-3 rounded-xl px-3.5 py-2 text-xs font-bold text-zinc-400 transition hover:bg-white/5 hover:text-white"
           >
             <Home className="h-4 w-4 text-zinc-500" />
             <span>Main Website</span>
           </Link>
 
+          {user && (
+            <div className="flex items-center gap-3 rounded-xl border border-white/5 bg-white/[0.02] p-2.5">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-600/20 text-xs font-bold uppercase text-red-400 border border-red-500/20">
+                {user.name ? user.name.charAt(0) : <UserIcon className="h-4 w-4" />}
+              </div>
+              <div className="overflow-hidden">
+                <p className="truncate text-xs font-bold text-white">
+                  {user.name || "Admin"}
+                </p>
+                <p className="truncate text-[10px] text-zinc-400">
+                  {user.email}
+                </p>
+              </div>
+            </div>
+          )}
+
           <button
             type="button"
-            onClick={() => logout()}
-            className="flex w-full items-center gap-3 rounded-xl border border-red-500/20 bg-red-500/5 px-3.5 py-2.5 text-xs font-semibold text-red-400 transition hover:bg-red-500/15"
+            onClick={handleLogout}
+            disabled={isPending}
+            className="flex w-full items-center gap-3 rounded-xl border border-rose-500/20 bg-rose-500/10 px-3.5 py-2.5 text-xs font-bold text-rose-400 transition hover:bg-rose-500/20 disabled:opacity-50"
           >
             <LogOut className="h-4 w-4" />
-            <span>Logout Admin</span>
+            <span>{isPending ? "Logging out..." : "Logout Admin"}</span>
           </button>
         </div>
       </aside>

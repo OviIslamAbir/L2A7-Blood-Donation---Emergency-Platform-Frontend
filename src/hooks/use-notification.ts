@@ -11,7 +11,6 @@ export const notificationKeys = {
   unreadCount: () => [...notificationKeys.all, "unread-count"] as const,
 };
 
-// 1. GET /notifications (Donor - Get Notifications)
 export const useGetMyNotifications = (query: INotificationQuery = {}) => {
   const queryParams = new URLSearchParams(
     Object.entries(query).reduce((acc, [key, val]) => {
@@ -31,7 +30,7 @@ export const useGetMyNotifications = (query: INotificationQuery = {}) => {
   });
 };
 
-// 2. GET /notifications/unread-count (Donor - Unread Count)
+
 export const useGetUnreadNotificationCount = () => {
   return useQuery({
     queryKey: notificationKeys.unreadCount(),
@@ -41,11 +40,11 @@ export const useGetUnreadNotificationCount = () => {
       });
       return res?.data?.unreadCount ?? res?.unreadCount ?? 0;
     },
-    refetchInterval: 15000, // Every 15 seconds
+    refetchInterval: 15000, 
   });
 };
 
-// 3. PATCH /notifications/:id/read (Donor - Mark Notification Read)
+
 export const useMarkNotificationAsRead = () => {
   const queryClient = useQueryClient();
 
@@ -61,7 +60,7 @@ export const useMarkNotificationAsRead = () => {
   });
 };
 
-// 4. PATCH /notifications/read-all (Donor - Mark All Read)
+
 export const useMarkAllNotificationsRead = () => {
   const queryClient = useQueryClient();
 
@@ -77,7 +76,7 @@ export const useMarkAllNotificationsRead = () => {
   });
 };
 
-// 5. DELETE /notifications/:id (Donor - Delete Notification)
+
 export const useDeleteNotification = () => {
   const queryClient = useQueryClient();
 

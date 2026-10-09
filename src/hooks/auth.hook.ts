@@ -14,7 +14,6 @@ import type {
   IVerifyEmailPayload,
 } from "@/types/auth.type";
 
-// 1. Register Hook
 export const useRegister = () => {
   return useMutation({
     mutationFn: async (payload: IRegisterPayload) => {
@@ -26,7 +25,7 @@ export const useRegister = () => {
   });
 };
 
-// 2. Verify Email (OTP) Hook
+
 export const useVerifyEmail = () => {
   const queryClient = useQueryClient();
 
@@ -49,7 +48,6 @@ export const useVerifyEmail = () => {
   });
 };
 
-// 3. Login Hook
 export const useLogin = () => {
   const queryClient = useQueryClient();
 
@@ -69,7 +67,7 @@ export const useLogin = () => {
   });
 };
 
-// 4. Google Login Hook (ENDPOINT FIXED HERE: /auth/google)
+
 export const useGoogleLogin = () => {
   const queryClient = useQueryClient();
 
@@ -89,7 +87,7 @@ export const useGoogleLogin = () => {
   });
 };
 
-// 5. Forgot Password Hook
+
 export const useForgotPassword = () => {
   return useMutation({
     mutationFn: async (payload: IForgotPasswordPayload) => {
@@ -101,7 +99,7 @@ export const useForgotPassword = () => {
   });
 };
 
-// 6. Reset Password Hook
+
 export const useResetPassword = () => {
   return useMutation({
     mutationFn: async (payload: IResetPasswordPayload) => {
@@ -113,7 +111,7 @@ export const useResetPassword = () => {
   });
 };
 
-// 7. Refresh Token Hook
+
 export const useRefreshToken = () => {
   return useMutation({
     mutationFn: async () => {
@@ -132,7 +130,7 @@ export const useRefreshToken = () => {
   });
 };
 
-// 8. Logout Hook
+
 export const useLogout = () => {
   const queryClient = useQueryClient();
 
@@ -149,7 +147,6 @@ export const useLogout = () => {
   });
 };
 
-// 9. Get Me
 export const useGetMe = () => {
   const isClient = typeof window !== "undefined";
   const hasToken = isClient ? !!localStorage.getItem("accessToken") : false;

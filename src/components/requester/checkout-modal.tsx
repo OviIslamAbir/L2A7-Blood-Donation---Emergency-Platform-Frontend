@@ -25,14 +25,13 @@ export default function CheckoutModal({
   if (!isOpen) return null;
 
   const handlePayment = () => {
-    // 500 BDT Standard Emergency Assistance Fee
+    
     createPaymentMutation.mutate(
       { requestId, amount: 500, provider },
       {
         onSuccess: (res: any) => {
           toast.success("Redirecting to payment gateway...");
           
-          // Extracts redirect URL for both bKash and Stripe
           const redirectUrl =
             res?.checkoutUrl ||
             res?.bkashUrl ||
@@ -40,7 +39,7 @@ export default function CheckoutModal({
             res?.data?.bkashUrl;
 
           if (redirectUrl) {
-            // Redirects user to bKash or Stripe secure portal
+            
             window.location.href = redirectUrl;
           } else {
             toast.error("Payment redirect URL missing from server.");
@@ -70,7 +69,6 @@ export default function CheckoutModal({
           </button>
         </div>
 
-        {/* Content */}
         <div className="my-5 space-y-4">
           <p className="text-xs text-zinc-400">
             Assistance fee for donor matching & emergency notification dispatch for{" "}
@@ -84,10 +82,10 @@ export default function CheckoutModal({
             <h2 className="mt-1 text-3xl font-black text-white">500 BDT</h2>
           </div>
 
-          <div className="space-y-2">
-            <label className="text-xs font-semibold text-zinc-400">
+          <fieldset className="space-y-2">
+            <legend className="text-xs font-semibold text-zinc-400">
               Select Payment Gateway
-            </label>
+            </legend>
             <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
@@ -113,10 +111,10 @@ export default function CheckoutModal({
                 <CreditCard className="h-4 w-4" /> Card / Stripe
               </button>
             </div>
-          </div>
+          </fieldset>
         </div>
 
-        {/* Submit */}
+      
         <button
           type="button"
           onClick={handlePayment}

@@ -17,6 +17,7 @@ import {
   ArrowRight,
   ShieldAlert,
 } from "lucide-react";
+import { toast } from "sonner";
 
 export function RegisterForm() {
   const router = useRouter();
@@ -39,10 +40,15 @@ export function RegisterForm() {
       { name, email, password, requesterType },
       {
         onSuccess: () => {
-          router.push(`/verify-email?email=${encodeURIComponent(email)}`);
+          // 💡 Dynamic Email Redirect to /register/verify-account
+          router.push(
+            `/register/verify-account?email=${encodeURIComponent(email)}`
+          );
         },
         onError: (err: any) => {
-          setErrorMsg(err?.message || "Registration failed. Please try again.");
+          const msg = err?.message || "Registration failed. Please try again.";
+          setErrorMsg(msg);
+          toast.error(msg);
         },
       }
     );
@@ -55,13 +61,32 @@ export function RegisterForm() {
       { idToken: credentialResponse.credential },
       {
         onSuccess: (data) => {
-          const role = data?.data?.user?.role;
-          if (role === "ADMIN") router.push("/admin");
-          else if (role === "DONOR") router.push("/donor");
-          else router.push("/");
+          // Save Access Token if returned
+          if (data?.data?.accessToken) {
+            localStorage.setItem("accessToken", data.data.accessToken);
+          }
+
+          toast.success("Google Authentication successful.");
+
+          // 💡 Dynamic Redirect based on (dashboard) routes
+          const role = data?.data?.user?.role || data?.data?.role;
+
+          if (role === "ADMIN") {
+            router.push("/admin");
+          } else if (role === "DONOR") {
+            router.push("/donor");
+          } else if (role === "REQUESTER") {
+            router.push("/requester");
+          } else {
+            router.push("/");
+          }
+
+          router.refresh();
         },
         onError: (err: any) => {
-          setErrorMsg(err?.message || "Google Authentication failed.");
+          const msg = err?.message || "Google Authentication failed.";
+          setErrorMsg(msg);
+          toast.error(msg);
         },
       }
     );

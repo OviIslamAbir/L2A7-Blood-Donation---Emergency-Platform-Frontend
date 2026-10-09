@@ -10,7 +10,7 @@ export const matchKeys = {
   forRequest: (requestId: string) => [...matchKeys.all, "request", requestId] as const,
 };
 
-// GET /donor-matches/:requestId/match (Get Matches for a Specific Request)
+
 export const useGetMatchesForRequest = (requestId: string) => {
   return useQuery({
     queryKey: matchKeys.forRequest(requestId),
@@ -29,7 +29,7 @@ export const useGetMatchesForRequest = (requestId: string) => {
   });
 };
 
-// GET /donor-matches/my-matches (For Donor)
+
 export const useGetMyMatches = () => {
   return useQuery({
     queryKey: matchKeys.myMatches(),
@@ -47,7 +47,7 @@ export const useGetMyMatches = () => {
   });
 };
 
-// PATCH /donor-matches/:id/accept
+
 export const useAcceptMatch = () => {
   const queryClient = useQueryClient();
 
@@ -64,7 +64,6 @@ export const useAcceptMatch = () => {
   });
 };
 
-// PATCH /donor-matches/:id/reject
 export const useRejectMatch = () => {
   const queryClient = useQueryClient();
 

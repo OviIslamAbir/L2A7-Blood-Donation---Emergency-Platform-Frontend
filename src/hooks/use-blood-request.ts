@@ -14,7 +14,7 @@ export const bloodRequestKeys = {
   single: (id: string) => [...bloodRequestKeys.all, "single", id] as const,
 };
 
-// 1. POST /blood-requests (Create Blood Request)
+
 export const useCreateBloodRequest = () => {
   const queryClient = useQueryClient();
 
@@ -31,7 +31,7 @@ export const useCreateBloodRequest = () => {
   });
 };
 
-// 2. GET /blood-requests (Get Requester's Blood Requests)
+
 export const useGetMyBloodRequests = () => {
   return useQuery({
     queryKey: bloodRequestKeys.myRequests(),
@@ -50,7 +50,7 @@ export const useGetMyBloodRequests = () => {
   });
 };
 
-// 3. GET /blood-requests/:id (Get Single Blood Request)
+
 export const useGetSingleBloodRequest = (requestId: string) => {
   return useQuery({
     queryKey: bloodRequestKeys.single(requestId),
@@ -65,7 +65,7 @@ export const useGetSingleBloodRequest = (requestId: string) => {
   });
 };
 
-// 4. PATCH /blood-requests/:id (Update Pending Blood Request)
+
 export const useUpdateBloodRequest = () => {
   const queryClient = useQueryClient();
 
@@ -88,7 +88,7 @@ export const useUpdateBloodRequest = () => {
   });
 };
 
-// 5. DELETE /blood-requests/:id (Cancel Blood Request - Exact match with backend)
+
 export const useCancelBloodRequest = () => {
   const queryClient = useQueryClient();
 
@@ -104,7 +104,7 @@ export const useCancelBloodRequest = () => {
   });
 };
 
-// 6. POST /donor-matches/match/:requestId (Trigger Donor Matching Service)
+
 export const useMatchDonorsForRequest = () => {
   const queryClient = useQueryClient();
 

@@ -60,7 +60,7 @@ export const adminKeys = {
   auditLogs: (query: AuditLogsQuery) => [...adminKeys.all, "audit-logs", query] as const,
 };
 
-// GET /admin/dashboard
+
 export const useAdminDashboard = () => {
   return useQuery({
     queryKey: adminKeys.dashboard(),
@@ -71,7 +71,6 @@ export const useAdminDashboard = () => {
   });
 };
 
-// GET /admin/donor-applications
 export const useDonorApplications = () => {
   return useQuery({
     queryKey: adminKeys.donorApplications(),
@@ -82,7 +81,7 @@ export const useDonorApplications = () => {
   });
 };
 
-/// PATCH /admin/donor/:userId/approve
+
 export const useApproveDonor = () => {
   const queryClient = useQueryClient();
 
@@ -93,13 +92,12 @@ export const useApproveDonor = () => {
       });
     },
     onSuccess: () => {
-      // Invalidate all admin queries to immediately update UI
+      
       queryClient.invalidateQueries({ queryKey: adminKeys.all });
     },
   });
 };
 
-// PATCH /admin/donor/:userId/reject
 export const useRejectDonor = () => {
   const queryClient = useQueryClient();
 
@@ -122,7 +120,6 @@ export const useRejectDonor = () => {
   });
 };
 
-// GET /admin/users
 export const useAdminUsers = (query: UsersQuery) => {
   return useQuery({
     queryKey: adminKeys.users(query),
@@ -136,7 +133,6 @@ export const useAdminUsers = (query: UsersQuery) => {
   });
 };
 
-// GET /admin/users/:userId
 export const useAdminUser = (userId: string) => {
   return useQuery({
     queryKey: adminKeys.user(userId),
@@ -148,7 +144,6 @@ export const useAdminUser = (userId: string) => {
   });
 };
 
-// PATCH /admin/users/:userId/status
 export const useUpdateUserStatus = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -165,7 +160,6 @@ export const useUpdateUserStatus = () => {
   });
 };
 
-// DELETE /admin/users/:userId
 export const useDeleteUser = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -178,7 +172,6 @@ export const useDeleteUser = () => {
   });
 };
 
-// GET /admin/blood-requests
 export const useAdminBloodRequests = () => {
   return useQuery({
     queryKey: adminKeys.bloodRequests(),
@@ -197,7 +190,7 @@ export const useAdminBloodRequests = () => {
   });
 };
 
-// PATCH /admin/blood-requests/:requestId/verify
+
 export const useVerifyBloodRequest = () => {
   const queryClient = useQueryClient();
   return useMutation({

@@ -9,7 +9,6 @@ import {
   ShieldCheck,
   UserRound,
   Droplets,
-  Sparkles,
   ArrowRight,
   Lock,
   Mail,
@@ -37,27 +36,6 @@ const loginSchema = z.object({
 });
 
 type LoginValues = z.infer<typeof loginSchema>;
-
-const demoAccounts = [
-  {
-    role: "Admin",
-    icon: ShieldCheck,
-    email: process.env.NEXT_PUBLIC_DEMO_ADMIN_EMAIL ?? "",
-    password: process.env.NEXT_PUBLIC_DEMO_ADMIN_PASSWORD ?? "",
-  },
-  {
-    role: "Requester",
-    icon: UserRound,
-    email: process.env.NEXT_PUBLIC_DEMO_REQUESTER_EMAIL ?? "",
-    password: process.env.NEXT_PUBLIC_DEMO_REQUESTER_PASSWORD ?? "",
-  },
-  {
-    role: "Donor",
-    icon: Droplets,
-    email: process.env.NEXT_PUBLIC_DEMO_DONOR_EMAIL ?? "",
-    password: process.env.NEXT_PUBLIC_DEMO_DONOR_PASSWORD ?? "",
-  },
-];
 
 export default function LoginForm() {
   const router = useRouter();
@@ -90,7 +68,20 @@ export default function LoginForm() {
         }
 
         toast.success("Login successful.");
-        router.push("/dashboard");
+
+        // 💡 Extract user role and redirect dynamically based on folder structure
+        const role = response?.data?.user?.role || response?.data?.role;
+
+        if (role === "ADMIN") {
+          router.push("/admin");
+        } else if (role === "DONOR") {
+          router.push("/donor");
+        } else if (role === "REQUESTER") {
+          router.push("/requester");
+        } else {
+          router.push("/");
+        }
+
         router.refresh();
       },
       onError: (err: any) => {
@@ -100,18 +91,6 @@ export default function LoginForm() {
           "Unable to login. Check credentials.";
         toast.error(errorMessage);
       },
-    });
-  }
-
-  function handleDemoLogin(account: (typeof demoAccounts)[number]) {
-    if (!account.email || !account.password) {
-      toast.error(`${account.role} demo account is not configured.`);
-      return;
-    }
-
-    authenticate({
-      email: account.email,
-      password: account.password,
     });
   }
 
@@ -297,7 +276,6 @@ export default function LoginForm() {
             <GoogleLoginComponent />
           </div>
         </div>
-
 
         {/* Redirect */}
         <p className="text-center text-xs text-zinc-400">

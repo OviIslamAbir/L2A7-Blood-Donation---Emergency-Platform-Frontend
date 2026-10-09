@@ -18,12 +18,12 @@ export default function DonorHeader() {
       </div>
 
       <div className="flex items-center gap-4">
-        {/* 🔥 Notification Popover (Added Here) */}
+
         <NotificationPopover />
 
         <div className="h-4 w-px bg-white/10" />
 
-        {/* Donor Status Badge */}
+
         {role === "DONOR" ? (
           <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-[11px] font-bold text-emerald-400">
             <ShieldCheck className="h-3.5 w-3.5" /> VERIFIED DONOR
@@ -38,7 +38,7 @@ export default function DonorHeader() {
           </span>
         )}
 
-        {/* Profile Avatar */}
+  
         <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-red-600 to-rose-600 text-xs font-black text-white shadow-md">
           <UserIcon className="h-4 w-4" />
         </div>

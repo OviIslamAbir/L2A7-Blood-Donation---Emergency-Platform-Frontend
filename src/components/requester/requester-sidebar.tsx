@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   PlusCircle,
@@ -11,6 +11,7 @@ import {
   LogOut,
   User as UserIcon,
 } from "lucide-react";
+import { toast } from "sonner";
 
 import { useGetMe, useLogout } from "@/hooks/auth.hook";
 
@@ -39,16 +40,35 @@ const NAV_ITEMS = [
 
 export default function RequesterSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const { data: user } = useGetMe();
   const { mutate: logout, isPending } = useLogout();
 
   const handleLogout = () => {
-    logout();
+    logout(undefined, {
+      onSuccess: () => {
+        
+        localStorage.removeItem("accessToken");
+
+        toast.success("Logged out successfully.");
+
+        
+        router.push("/login");
+        router.refresh();
+      },
+      onError: (err: any) => {
+       
+        localStorage.removeItem("accessToken");
+        toast.error(err?.message || "Logged out.");
+        router.push("/login");
+        router.refresh();
+      },
+    });
   };
 
   return (
     <aside className="sticky top-0 flex h-screen w-64 flex-col border-r border-white/10 bg-[#0a0d14]/90 backdrop-blur-xl">
-      {/* Brand Header */}
+      
       <div className="flex h-16 items-center border-b border-white/5 px-6">
         <Link href="/" className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-red-600 to-rose-600 shadow-lg shadow-red-600/30">
@@ -65,13 +85,11 @@ export default function RequesterSidebar() {
         </Link>
       </div>
 
-      {/* Nav Menu */}
       <div className="flex-1 space-y-1 p-4">
         <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-zinc-500">
           Navigation
         </p>
         {NAV_ITEMS.map((item) => {
-          // Precise Active Route Matching
           const isActive =
             item.href === "/requester"
               ? pathname === "/requester"
@@ -96,7 +114,7 @@ export default function RequesterSidebar() {
         })}
       </div>
 
-      {/* User Info & Logout Footer */}
+
       <div className="border-t border-white/5 p-4 space-y-3">
         {user && (
           <div className="flex items-center gap-3 rounded-xl border border-white/5 bg-white/[0.02] p-2.5">

@@ -30,7 +30,7 @@ export default function AdminStatCard({
       transition={{ duration: 0.3, ease: "easeOut" }}
       className="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#0a0d14]/80 p-5 backdrop-blur-xl transition-all duration-300 hover:border-red-500/30 hover:bg-[#0d111a] hover:shadow-[0_10px_30px_rgba(220,38,38,0.1)]"
     >
-      {/* Background Subtle Ambient Glow */}
+      
       <div className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-red-500/5 blur-2xl transition-all duration-500 group-hover:bg-red-500/15" />
 
       <div className="flex items-center justify-between">
