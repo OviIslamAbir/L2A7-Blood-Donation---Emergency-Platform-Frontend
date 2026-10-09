@@ -14,7 +14,7 @@ export default function DonorMatchesPage() {
   const handleAccept = (match: any) => {
     acceptMutation.mutate(match.id, {
       onSuccess: () => {
-        // Automatically schedule a donation entry
+        
         createDonationMutation.mutate(
           {
             requestId: match.requestId,
@@ -74,7 +74,7 @@ export default function DonorMatchesPage() {
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 p-4">
-      {/* Header */}
+    
       <div className="flex items-center justify-between border-b border-white/5 pb-4">
         <div>
           <h1 className="text-xl font-black text-white">Emergency Blood Matches</h1>
@@ -88,7 +88,7 @@ export default function DonorMatchesPage() {
         </div>
       </div>
 
-      {/* Empty State */}
+      
       {matches.length === 0 ? (
         <div className="flex h-64 flex-col items-center justify-center rounded-2xl border border-dashed border-white/10 bg-[#0a0d14]/50 p-8 text-center">
           <Sparkles className="h-10 w-10 text-zinc-600 mb-3" />
@@ -98,7 +98,7 @@ export default function DonorMatchesPage() {
           </p>
         </div>
       ) : (
-        /* Matches Grid */
+        
         <div className="grid gap-4 md:grid-cols-2">
           {matches.map((match) => {
             const req = match.request as any;
@@ -114,7 +114,7 @@ export default function DonorMatchesPage() {
                 }`}
               >
                 <div>
-                  {/* Top Badges */}
+                  
                   <div className="flex items-center justify-between border-b border-white/5 pb-3">
                     <div className="flex items-center gap-2">
                       <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-red-600 text-xs font-black text-white shadow-lg shadow-red-600/30">
@@ -139,7 +139,7 @@ export default function DonorMatchesPage() {
                     </div>
                   </div>
 
-                  {/* Patient Info */}
+                
                   <div className="mt-3 space-y-1.5">
                     <h3 className="text-base font-bold text-white">
                       {req?.patientName || "Anonymous Patient"}
@@ -164,7 +164,6 @@ export default function DonorMatchesPage() {
                   </div>
                 </div>
 
-                {/* Status Actions */}
                 <div className="mt-5 border-t border-white/5 pt-3">
                   {match.status === "NOTIFIED" ? (
                     <div className="flex gap-2">

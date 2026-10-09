@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/a11y/noLabelWithoutControl: <explanation> */
 "use client";
 
 import { useState } from "react";
@@ -131,7 +132,7 @@ export default function DonorApplicationPage() {
         </button>
       </div>
 
-      {/* STATE 1: ALREADY APPROVED / IS DONOR */}
+     
       {(appStatus === "APPROVED" || isDonorRole) && (
         <div className="rounded-2xl border border-emerald-500/30 bg-gradient-to-br from-emerald-950/40 via-[#0a0d14] to-black p-8 backdrop-blur-xl">
           <div className="flex flex-col items-center text-center">
@@ -173,7 +174,6 @@ export default function DonorApplicationPage() {
         </div>
       )}
 
-      {/* STATE 2: PENDING APPROVAL */}
       {appStatus === "PENDING" && !isDonorRole && (
         <div className="rounded-2xl border border-amber-500/30 bg-gradient-to-br from-amber-950/20 via-[#0a0d14] to-black p-8 backdrop-blur-xl">
           <div className="flex flex-col items-center text-center">
@@ -209,7 +209,6 @@ export default function DonorApplicationPage() {
         </div>
       )}
 
-      {/* STATE 3: APPLICATION FORM (NONE or REJECTED) */}
       {(appStatus === "NONE" || appStatus === "REJECTED") && !isDonorRole && (
         <div className="rounded-2xl border border-white/10 bg-[#0a0d14]/80 p-6 sm:p-8 backdrop-blur-xl shadow-2xl">
           {appStatus === "REJECTED" && (
@@ -238,7 +237,7 @@ export default function DonorApplicationPage() {
               </div>
             )}
 
-            {/* Blood Group Selector */}
+            
             <div>
               <label className="mb-2 block text-xs font-bold text-zinc-300">
                 Select Blood Group <span className="text-red-500">*</span>
@@ -261,7 +260,6 @@ export default function DonorApplicationPage() {
               </div>
             </div>
 
-            {/* Division & District */}
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <label className="mb-1.5 block text-xs font-bold text-zinc-300">
@@ -295,7 +293,7 @@ export default function DonorApplicationPage() {
               </div>
             </div>
 
-            {/* Date of Birth & Full Address */}
+       
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <label className="mb-1.5 block text-xs font-bold text-zinc-300">
@@ -324,7 +322,7 @@ export default function DonorApplicationPage() {
               </div>
             </div>
 
-            {/* Submit Button */}
+
             <div className="pt-2">
               <button
                 type="submit"

@@ -89,7 +89,7 @@ export default function DonorProfilePage() {
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
-      {/* Top Banner */}
+   
       <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0a0d14]/80 p-6 backdrop-blur-xl sm:p-8">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
@@ -117,7 +117,7 @@ export default function DonorProfilePage() {
         </div>
       </div>
 
-      {/* Profile Form Grid */}
+     
       <div className="rounded-2xl border border-white/10 bg-[#0a0d14]/80 p-6 backdrop-blur-xl sm:p-8 shadow-2xl">
         <div className="border-b border-white/5 pb-4">
           <h2 className="text-sm font-bold text-white">Edit Donor Credentials & Availability</h2>
@@ -140,7 +140,7 @@ export default function DonorProfilePage() {
             </div>
           )}
 
-          {/* Blood Group Selector */}
+        
           <div>
             <label className="mb-2 block text-xs font-bold text-zinc-300">Blood Group</label>
             <div className="grid grid-cols-4 gap-2 sm:grid-cols-8">
@@ -161,7 +161,7 @@ export default function DonorProfilePage() {
             </div>
           </div>
 
-          {/* Division & District */}
+         
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <label className="mb-1.5 block text-xs font-bold text-zinc-300">Division</label>
@@ -191,7 +191,6 @@ export default function DonorProfilePage() {
             </div>
           </div>
 
-          {/* Date of Birth & Address */}
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <label className="mb-1.5 block text-xs font-bold text-zinc-300">Date of Birth</label>
@@ -215,7 +214,6 @@ export default function DonorProfilePage() {
             </div>
           </div>
 
-          {/* Save Button */}
           <div className="pt-2">
             <button
               type="submit"

@@ -19,7 +19,7 @@ import AdminHeader from "@/components/admin/admin-header";
 export default function AdminDashboardPage() {
   const { data, isLoading, isError, refetch, isFetching } = useAdminDashboard();
 
-  // Defensive Mapping: Works with flat or nested API data structures
+  
   const totalUsers = data?.totalUsers ?? data?.users?.total ?? 0;
   const totalDonors = data?.totalDonors ?? data?.users?.donors ?? 0;
   const totalRequesters = data?.totalRequesters ?? data?.users?.requesters ?? 0;
@@ -95,7 +95,7 @@ export default function AdminDashboardPage() {
         }
       />
 
-      {/* Loading Skeleton */}
+  
       {isLoading ? (
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {[
@@ -130,14 +130,14 @@ export default function AdminDashboardPage() {
         </div>
       ) : (
         <>
-          {/* Stats Grid */}
+
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {stats.map((stat) => (
               <AdminStatCard key={stat.title} {...stat} />
             ))}
           </div>
 
-          {/* Quick Actions Panel */}
+
           <section className="pt-2">
             <h2 className="mb-4 text-base font-bold text-white">
               Quick Management Shortcuts

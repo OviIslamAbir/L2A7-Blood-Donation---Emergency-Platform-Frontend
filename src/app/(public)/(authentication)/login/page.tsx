@@ -32,7 +32,7 @@ const floatingItems = [
 export default function LoginPage() {
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#05070a] text-white">
-      {/* Background */}
+    
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute inset-0 opacity-[0.035] [background-image:linear-gradient(rgba(255,255,255,0.8)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.8)_1px,transparent_1px)] [background-size:55px_55px]" />
         <div className="absolute -left-40 top-0 h-[500px] w-[500px] rounded-full bg-red-600/[0.07] blur-[140px]" />
@@ -40,7 +40,7 @@ export default function LoginPage() {
       </div>
 
       <div className="relative grid min-h-screen lg:grid-cols-2">
-        {/* Login section */}
+       
         <section className="flex min-h-screen flex-col p-6 sm:p-10 lg:p-12">
           <motion.div
             initial={{ opacity: 0, y: -15 }}
@@ -78,17 +78,16 @@ export default function LoginPage() {
           </p>
         </section>
 
-        {/* 3D visual section */}
         <section className="relative hidden items-center justify-center overflow-hidden border-l border-white/[0.04] bg-[#080a10] lg:flex">
-          {/* Ambient glow */}
+          
           <div className="pointer-events-none absolute inset-0">
             <div className="absolute left-1/2 top-1/2 h-[550px] w-[550px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-600/[0.08] blur-[120px]" />
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,#080a10_75%)]" />
           </div>
 
-          {/* Orbital visual */}
+       
           <div className="relative flex h-[580px] w-[580px] items-center justify-center">
-            {/* Outer ring */}
+            
             <motion.div
               animate={{ rotate: 360 }}
               transition={{
@@ -102,7 +101,7 @@ export default function LoginPage() {
               <span className="absolute bottom-8 right-12 h-1.5 w-1.5 rounded-full bg-rose-400 shadow-[0_0_15px_#fb7185]" />
             </motion.div>
 
-            {/* Middle ring */}
+            
             <motion.div
               animate={{ rotate: -360 }}
               transition={{
@@ -115,7 +114,7 @@ export default function LoginPage() {
               <span className="absolute right-10 top-12 h-2 w-2 rounded-full bg-rose-400 shadow-[0_0_18px_#fb7185]" />
             </motion.div>
 
-            {/* Inner ring */}
+           
             <motion.div
               animate={{ rotate: 360 }}
               transition={{
@@ -126,7 +125,7 @@ export default function LoginPage() {
               className="absolute h-[280px] w-[280px] rounded-full border border-red-500/[0.18]"
             />
 
-            {/* 3D blood drop */}
+            
             <motion.div
               animate={{
                 y: [0, -15, 0],
@@ -141,7 +140,7 @@ export default function LoginPage() {
               style={{ transformStyle: "preserve-3d" }}
               className="relative z-10 flex h-56 w-56 items-center justify-center"
             >
-              {/* Drop shadow */}
+     
               <motion.div
                 animate={{
                   scale: [1, 0.85, 1],
@@ -155,7 +154,7 @@ export default function LoginPage() {
                 className="absolute bottom-2 h-16 w-32 rounded-full bg-red-600/30 blur-2xl"
               />
 
-              {/* Drop shape */}
+             
               <div
                 className="relative flex h-44 w-40 items-center justify-center"
                 style={{
@@ -244,7 +243,6 @@ export default function LoginPage() {
               </div>
             </motion.div>
 
-            {/* Floating info cards */}
             {floatingItems.map((item) => {
               const Icon = item.icon;
 
@@ -278,7 +276,6 @@ export default function LoginPage() {
             })}
           </div>
 
-          {/* Bottom content */}
           <motion.div
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}

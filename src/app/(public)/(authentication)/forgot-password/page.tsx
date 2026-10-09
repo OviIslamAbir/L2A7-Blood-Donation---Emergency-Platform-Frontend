@@ -90,7 +90,7 @@ export default function ForgotPasswordPage() {
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#05070a] text-white">
-      {/* Background Grid & Glows */}
+      
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute inset-0 opacity-[0.035] [background-image:linear-gradient(rgba(255,255,255,0.8)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.8)_1px,transparent_1px)] [background-size:55px_55px]" />
         <div className="absolute -left-40 top-0 h-[500px] w-[500px] rounded-full bg-red-600/[0.07] blur-[140px]" />
@@ -98,7 +98,7 @@ export default function ForgotPasswordPage() {
       </div>
 
       <div className="relative grid min-h-screen lg:grid-cols-2">
-        {/* Form Section */}
+       
         <section className="flex min-h-screen flex-col p-6 sm:p-10 lg:p-12">
           <motion.div
             initial={{ opacity: 0, y: -15 }}
@@ -127,7 +127,7 @@ export default function ForgotPasswordPage() {
               }}
               className="w-full max-w-md space-y-6"
             >
-              {/* Header */}
+             
               <div className="space-y-3 text-center">
                 <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-red-500/20 bg-red-500/[0.07] text-red-400 shadow-[0_0_35px_rgba(239,68,68,0.12)]">
                   <KeyRound className="h-7 w-7" />
@@ -142,7 +142,7 @@ export default function ForgotPasswordPage() {
                 </p>
               </div>
 
-              {/* Form */}
+          
               <form
                 onSubmit={(event) => {
                   event.preventDefault();
@@ -231,7 +231,7 @@ export default function ForgotPasswordPage() {
           </p>
         </section>
 
-        {/* 3D Visual Section */}
+        
         <section className="relative hidden items-center justify-center overflow-hidden border-l border-white/[0.04] bg-[#080a10] lg:flex">
           <div className="pointer-events-none absolute inset-0">
             <div className="absolute left-1/2 top-1/2 h-[550px] w-[550px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-600/[0.08] blur-[120px]" />

@@ -35,7 +35,7 @@ export default function DonorDashboardPage() {
 
   return (
     <div className="space-y-6">
-      {/* Banner Notice */}
+      
       <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-r from-red-950/40 via-[#0a0d14] to-black p-6 sm:p-8 backdrop-blur-xl">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-1">
@@ -60,7 +60,6 @@ export default function DonorDashboardPage() {
         </div>
       </div>
 
-      {/* Quick Stats Grid */}
       <div className="grid gap-4 sm:grid-cols-3">
         <DonorStatCard
           title="Donor Profile Status"
@@ -84,7 +83,7 @@ export default function DonorDashboardPage() {
         />
       </div>
 
-      {/* Main Profile / Action Card */}
+      
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="rounded-2xl border border-white/10 bg-[#0a0d14]/80 p-6 backdrop-blur-xl lg:col-span-2">
           <h2 className="flex items-center gap-2 text-sm font-bold text-white">
@@ -119,7 +118,7 @@ export default function DonorDashboardPage() {
           )}
         </div>
 
-        {/* Quick Actions Card */}
+       
         <div className="rounded-2xl border border-white/10 bg-[#0a0d14]/80 p-6 backdrop-blur-xl">
           <h2 className="text-sm font-bold text-white">Quick Actions</h2>
           <div className="mt-4 space-y-2.5">

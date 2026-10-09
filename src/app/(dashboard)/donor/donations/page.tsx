@@ -30,7 +30,7 @@ export default function DonorDonationsPage() {
   const [activeNotesId, setActiveNotesId] = useState<string | null>(null);
   const [noteText, setNoteText] = useState("");
 
-  // Handle Complete Donation with optional notes
+
   const handleComplete = (id: string) => {
     completeMutation.mutate(
       {
@@ -52,7 +52,7 @@ export default function DonorDonationsPage() {
     );
   };
 
-  // Handle Cancel Donation
+
   const handleCancel = (id: string) => {
     cancelMutation.mutate(id, {
       onSuccess: () => {
@@ -93,7 +93,7 @@ export default function DonorDonationsPage() {
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 p-4">
-      {/* Header Section */}
+    
       <div className="flex items-center justify-between border-b border-white/5 pb-4">
         <div>
           <h1 className="text-xl font-black text-white">My Blood Donations</h1>
@@ -107,7 +107,7 @@ export default function DonorDonationsPage() {
         </div>
       </div>
 
-      {/* Empty State */}
+ 
       {donations.length === 0 ? (
         <div className="flex h-64 flex-col items-center justify-center rounded-2xl border border-dashed border-white/10 bg-[#0a0d14]/50 p-8 text-center">
           <HeartHandshake className="mb-3 h-10 w-10 text-zinc-600" />
@@ -117,7 +117,7 @@ export default function DonorDonationsPage() {
           </p>
         </div>
       ) : (
-        /* Donations List Grid */
+
         <div className="space-y-4">
           {donations.map((d) => {
             const req = d.request;
@@ -135,7 +135,7 @@ export default function DonorDonationsPage() {
                 }`}
               >
                 <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
-                  {/* Left Info Column */}
+                  
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <span className="flex h-7 min-w-[2.5rem] items-center justify-center rounded-lg bg-red-600 px-2 text-xs font-black text-white shadow-lg shadow-red-600/30">
@@ -145,7 +145,7 @@ export default function DonorDonationsPage() {
                         {req?.units || 1} Bag(s) Required
                       </span>
 
-                      {/* Status Badges */}
+                      
                       {isScheduled && (
                         <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-[10px] font-bold text-amber-400">
                           <Clock className="h-3 w-3" /> SCHEDULED
@@ -184,7 +184,7 @@ export default function DonorDonationsPage() {
                       )}
                     </div>
 
-                    {/* Donated Notes */}
+            
                     {d.notes && (
                       <p className="mt-2 flex items-center gap-1.5 rounded-xl bg-white/5 p-2.5 text-[11px] text-zinc-300">
                         <FileText className="h-3.5 w-3.5 shrink-0 text-zinc-400" />
@@ -193,7 +193,7 @@ export default function DonorDonationsPage() {
                     )}
                   </div>
 
-                  {/* Right Action Column */}
+                
                   {isScheduled && (
                     <div className="flex shrink-0 flex-col gap-2 sm:items-end">
                       {activeNotesId === d.id ? (

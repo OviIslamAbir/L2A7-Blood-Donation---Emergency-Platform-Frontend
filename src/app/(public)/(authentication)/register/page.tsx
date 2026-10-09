@@ -30,7 +30,7 @@ const floatingItems = [
 export default function RegisterPage() {
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#05070a] text-white">
-      {/* Background Grid & Glows */}
+     
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute inset-0 opacity-[0.035] [background-image:linear-gradient(rgba(255,255,255,0.8)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.8)_1px,transparent_1px)] [background-size:55px_55px]" />
         <div className="absolute -left-40 top-0 h-[500px] w-[500px] rounded-full bg-red-600/[0.07] blur-[140px]" />
@@ -38,7 +38,7 @@ export default function RegisterPage() {
       </div>
 
       <div className="relative grid min-h-screen lg:grid-cols-2">
-        {/* Register Section */}
+       
         <section className="flex min-h-screen flex-col p-6 sm:p-10 lg:p-12">
           <motion.div
             initial={{ opacity: 0, y: -15 }}
@@ -76,17 +76,16 @@ export default function RegisterPage() {
           </p>
         </section>
 
-        {/* 3D Visual Section */}
+       
         <section className="relative hidden items-center justify-center overflow-hidden border-l border-white/[0.04] bg-[#080a10] lg:flex">
-          {/* Ambient Glow */}
+          
           <div className="pointer-events-none absolute inset-0">
             <div className="absolute left-1/2 top-1/2 h-[550px] w-[550px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-600/[0.08] blur-[120px]" />
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,#080a10_75%)]" />
           </div>
 
-          {/* Orbital Visual */}
           <div className="relative flex h-[580px] w-[580px] items-center justify-center">
-            {/* Outer Ring */}
+            
             <motion.div
               animate={{ rotate: 360 }}
               transition={{
@@ -100,7 +99,6 @@ export default function RegisterPage() {
               <span className="absolute bottom-8 right-12 h-1.5 w-1.5 rounded-full bg-rose-400 shadow-[0_0_15px_#fb7185]" />
             </motion.div>
 
-            {/* Middle Ring */}
             <motion.div
               animate={{ rotate: -360 }}
               transition={{
@@ -113,7 +111,7 @@ export default function RegisterPage() {
               <span className="absolute right-10 top-12 h-2 w-2 rounded-full bg-rose-400 shadow-[0_0_18px_#fb7185]" />
             </motion.div>
 
-            {/* Inner Ring */}
+           
             <motion.div
               animate={{ rotate: 360 }}
               transition={{
@@ -124,7 +122,7 @@ export default function RegisterPage() {
               className="absolute h-[280px] w-[280px] rounded-full border border-red-500/[0.18]"
             />
 
-            {/* 3D Blood Drop */}
+            
             <motion.div
               animate={{
                 y: [0, -15, 0],
@@ -139,7 +137,7 @@ export default function RegisterPage() {
               style={{ transformStyle: "preserve-3d" }}
               className="relative z-10 flex h-56 w-56 items-center justify-center"
             >
-              {/* Drop Shadow */}
+           
               <motion.div
                 animate={{
                   scale: [1, 0.85, 1],
@@ -153,7 +151,7 @@ export default function RegisterPage() {
                 className="absolute bottom-2 h-16 w-32 rounded-full bg-red-600/30 blur-2xl"
               />
 
-              {/* Drop Shape */}
+              
               <div
                 className="relative flex h-44 w-40 items-center justify-center"
                 style={{
@@ -239,7 +237,6 @@ export default function RegisterPage() {
               </div>
             </motion.div>
 
-            {/* Floating Info Cards */}
             {floatingItems.map((item) => {
               const Icon = item.icon;
 
@@ -273,7 +270,7 @@ export default function RegisterPage() {
             })}
           </div>
 
-          {/* Bottom Content */}
+          
           <motion.div
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}

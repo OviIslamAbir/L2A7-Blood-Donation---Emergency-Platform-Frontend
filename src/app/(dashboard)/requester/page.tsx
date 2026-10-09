@@ -25,7 +25,7 @@ export default function RequesterDashboardPage() {
 
   return (
     <div className="space-y-6">
-      {/* Welcome Banner */}
+      
       <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-r from-red-950/40 via-[#0a0d14] to-black p-6 sm:p-8 backdrop-blur-xl">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-1">
@@ -50,7 +50,6 @@ export default function RequesterDashboardPage() {
         </div>
       </div>
 
-      {/* Stats Cards */}
       <div className="grid gap-4 sm:grid-cols-3">
         <div className="rounded-2xl border border-white/10 bg-[#0a0d14] p-5">
           <div className="flex items-center justify-between">
@@ -90,7 +89,6 @@ export default function RequesterDashboardPage() {
         </div>
       </div>
 
-      {/* Quick Navigation Links */}
       <div className="grid gap-4 sm:grid-cols-2">
         <Link
           href="/requester/my-requests"

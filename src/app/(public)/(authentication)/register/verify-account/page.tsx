@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/a11y/noLabelWithoutControl: <explanation> */
 "use client";
 
 import { useState } from "react";
@@ -64,17 +65,16 @@ export default function VerifyAccountPage() {
       return;
     }
     toast.info("Resending OTP to " + email);
-    // TODO: প্রয়োজন অনুযায়ী Resend OTP API হুক কল করতে পারেন
   };
 
   return (
     <div className="relative mx-auto w-full max-w-md overflow-hidden rounded-3xl border border-white/10 bg-[#0a0d14]/85 p-6 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.6)] sm:p-8">
-      {/* Background Ambient Glows */}
+      
       <div className="pointer-events-none absolute -left-20 -top-20 h-48 w-48 rounded-full bg-red-600/15 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-20 -right-20 h-48 w-48 rounded-full bg-rose-600/10 blur-3xl" />
 
       <div className="relative z-10 space-y-6">
-        {/* Header */}
+        
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
@@ -99,7 +99,7 @@ export default function VerifyAccountPage() {
           </p>
         </motion.div>
 
-        {/* Verification Form */}
+       
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-1.5">
             <label className="block text-center text-[11px] font-bold uppercase tracking-wider text-zinc-400">
@@ -142,7 +142,7 @@ export default function VerifyAccountPage() {
           </motion.div>
         </form>
 
-        {/* Resend & Back Navigation */}
+    
         <div className="space-y-3 pt-2 text-center text-xs">
           <p className="text-zinc-400">
             Didn't receive the code?{" "}

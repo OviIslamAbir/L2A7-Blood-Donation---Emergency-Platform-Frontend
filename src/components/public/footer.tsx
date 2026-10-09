@@ -1,3 +1,4 @@
+"use client";
 
 import Link from "next/link";
 import {
@@ -12,7 +13,7 @@ import {
 
 const platformLinks = [
   { label: "Find Donors", href: "/donors" },
-  { label: "Request Blood", href: "/requests" },
+  { label: "Request Blood", href: "/create-request" },
   { label: "Blood Requests", href: "/requests" },
 ];
 
@@ -25,16 +26,14 @@ const companyLinks = [
 export function Footer() {
   return (
     <footer className="relative overflow-hidden border-t border-white/5 bg-[#06080c] text-zinc-300">
-
       <div className="pointer-events-none absolute -left-40 top-10 h-96 w-96 rounded-full bg-red-600/10 blur-[120px]" />
-
       <div className="pointer-events-none absolute -right-40 bottom-0 h-96 w-96 rounded-full bg-rose-600/10 blur-[120px]" />
-
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:40px_40px]" />
 
       <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-5">
 
+          {/* Brand Info */}
           <div className="lg:col-span-2">
             <Link
               href="/"
@@ -42,7 +41,6 @@ export function Footer() {
             >
               <span className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-red-600 to-rose-600 shadow-xl shadow-red-600/25 transition-all duration-500 group-hover:-translate-y-1 group-hover:rotate-6 group-hover:shadow-red-600/40">
                 <span className="absolute inset-0 animate-ping rounded-2xl bg-red-500/10" />
-
                 <HeartPulse className="relative h-6 w-6" />
               </span>
 
@@ -55,7 +53,6 @@ export function Footer() {
               A real-time emergency blood donation platform connecting
               voluntary donors with patients during critical moments.
             </p>
-
 
             <div className="mt-7 max-w-md">
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-500">
@@ -79,7 +76,7 @@ export function Footer() {
             </div>
           </div>
 
-
+          {/* Platform Links */}
           <div>
             <h3 className="mb-5 text-xs font-bold uppercase tracking-[0.2em] text-white">
               Platform
@@ -87,13 +84,12 @@ export function Footer() {
 
             <ul className="space-y-3">
               {platformLinks.map((link) => (
-                <li key={link.href}>
+                <li key={link.label}>
                   <Link
                     href={link.href}
                     className="group flex items-center gap-1 text-sm text-zinc-500 transition-all duration-300 hover:translate-x-1 hover:text-red-500"
                   >
                     {link.label}
-
                     <ArrowUpRight className="h-3.5 w-3.5 opacity-0 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-100" />
                   </Link>
                 </li>
@@ -101,7 +97,7 @@ export function Footer() {
             </ul>
           </div>
 
-  
+          {/* Company Links */}
           <div>
             <h3 className="mb-5 text-xs font-bold uppercase tracking-[0.2em] text-white">
               Company
@@ -109,13 +105,12 @@ export function Footer() {
 
             <ul className="space-y-3">
               {companyLinks.map((link) => (
-                <li key={link.href}>
+                <li key={link.label}>
                   <Link
                     href={link.href}
                     className="group flex items-center gap-1 text-sm text-zinc-500 transition-all duration-300 hover:translate-x-1 hover:text-red-500"
                   >
                     {link.label}
-
                     <ArrowUpRight className="h-3.5 w-3.5 opacity-0 transition-all duration-300 group-hover:opacity-100" />
                   </Link>
                 </li>
@@ -123,6 +118,7 @@ export function Footer() {
             </ul>
           </div>
 
+          {/* Emergency Support */}
           <div>
             <h3 className="mb-5 text-xs font-bold uppercase tracking-[0.2em] text-white">
               Emergency Support
@@ -141,7 +137,6 @@ export function Footer() {
                   <span className="block font-semibold text-zinc-300">
                     +880 1800-000000
                   </span>
-
                   <span className="text-xs text-zinc-600">
                     24/7 Emergency
                   </span>
@@ -165,7 +160,6 @@ export function Footer() {
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-red-500/10 bg-red-500/10 text-red-500">
                   <MapPin className="h-4 w-4" />
                 </span>
-
                 <span className="text-zinc-500">Dhaka, Bangladesh</span>
               </div>
             </div>
@@ -173,12 +167,11 @@ export function Footer() {
         </div>
       </div>
 
-
+      {/* Footer Bottom */}
       <div className="relative border-t border-white/5 bg-black/20">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-6 text-xs text-zinc-600 sm:flex-row sm:px-6 lg:px-8">
           <p>
-            © {new Date().getFullYear()} LifeDrop Platform. All rights
-            reserved.
+            © {new Date().getFullYear()} LifeDrop Platform. All rights reserved.
           </p>
 
           <p className="flex items-center gap-1.5">
@@ -191,4 +184,3 @@ export function Footer() {
     </footer>
   );
 }
-
