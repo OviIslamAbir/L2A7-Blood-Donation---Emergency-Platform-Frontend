@@ -17,12 +17,22 @@ export const apiClient = ofetch.create({
     }
   },
   async onResponseError({ response }) {
-    // If server sends non-JSON or HTML 404/500 error page, format clean error msg
-    if (typeof response._data === "string" && response._data.includes("<!DOCTYPE")) {
-      response._data = {
-        success: false,
-        message: "Backend endpoint not found (404) or server error.",
-      };
+    const data = response._data;
+
+    // 💡 HTML Page / 404 Route Error
+    if (typeof data === "string" && data.includes("<!DOCTYPE")) {
+      throw new Error("Backend endpoint not found (404) or server error.");
+    }
+
+    // 💡 Extract exact backend error message (matches Postman response JSON)
+    const backendMessage =
+      data?.message ||
+      data?.errorSources?.[0]?.message ||
+      (Array.isArray(data?.errors) ? data.errors[0]?.message : null) ||
+      data?.error;
+
+    if (backendMessage) {
+      throw new Error(backendMessage);
     }
   },
 });

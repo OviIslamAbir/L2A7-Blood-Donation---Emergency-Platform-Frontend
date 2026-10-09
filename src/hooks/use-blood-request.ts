@@ -31,32 +31,19 @@ export const useCreateBloodRequest = () => {
   });
 };
 
-// 2. GET /blood-requests/my-requests ( Get Requester's Blood Requests)
+// 2. GET /blood-requests (Get Requester's Blood Requests)
 export const useGetMyBloodRequests = () => {
   return useQuery({
     queryKey: bloodRequestKeys.myRequests(),
     queryFn: async () => {
-      // NOTE: check if backend endpoint is /blood-requests or /blood-requests/my-requests
       const response = await apiClient<any>("/blood-requests", {
         method: "GET",
       });
 
-      // 1. Direct Array Response
-      if (Array.isArray(response)) {
-        return response as IBloodRequest[];
-      }
-      // 2. Standard Wrapper: { success: true, data: [...] }
-      if (Array.isArray(response?.data)) {
-        return response.data as IBloodRequest[];
-      }
-      // 3. Custom Wrapper: { requests: [...] }
-      if (Array.isArray(response?.requests)) {
-        return response.requests as IBloodRequest[];
-      }
-      // 4. Nested Wrapper: { data: { requests: [...] } }
-      if (Array.isArray(response?.data?.requests)) {
-        return response.data.requests as IBloodRequest[];
-      }
+      if (Array.isArray(response)) return response as IBloodRequest[];
+      if (Array.isArray(response?.data)) return response.data as IBloodRequest[];
+      if (Array.isArray(response?.requests)) return response.requests as IBloodRequest[];
+      if (Array.isArray(response?.data?.requests)) return response.data.requests as IBloodRequest[];
 
       return [] as IBloodRequest[];
     },
@@ -73,7 +60,8 @@ export const useGetSingleBloodRequest = (requestId: string) => {
       });
       return (response?.data || response) as IBloodRequest;
     },
-    enabled: !!requestId,
+    enabled: !!requestId && requestId !== "undefined" && requestId.trim() !== "",
+    retry: false,
   });
 };
 
@@ -100,14 +88,14 @@ export const useUpdateBloodRequest = () => {
   });
 };
 
-// 5. PATCH /blood-requests/:id/cancel (Cancel Pending Blood Request)
+// 5. DELETE /blood-requests/:id (Cancel Blood Request - Exact match with backend)
 export const useCancelBloodRequest = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (requestId: string) => {
-      return await apiClient<any>(`/blood-requests/${requestId}/cancel`, {
-        method: "PATCH",
+      return await apiClient<any>(`/blood-requests/${requestId}`, {
+        method: "DELETE",
       });
     },
     onSuccess: () => {
@@ -122,7 +110,7 @@ export const useMatchDonorsForRequest = () => {
 
   return useMutation({
     mutationFn: async (requestId: string) => {
-      return await apiClient<any>(`/donor-matches/match/${requestId}`, {
+      return await apiClient<any>(`/donor-matches/${requestId}/match`, {
         method: "POST",
       });
     },

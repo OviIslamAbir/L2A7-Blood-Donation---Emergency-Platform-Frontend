@@ -10,12 +10,12 @@ export const matchKeys = {
   forRequest: (requestId: string) => [...matchKeys.all, "request", requestId] as const,
 };
 
-// GET /donor-matches/request/:requestId (Get Matches for a Specific Request)
+// GET /donor-matches/:requestId/match (Get Matches for a Specific Request)
 export const useGetMatchesForRequest = (requestId: string) => {
   return useQuery({
     queryKey: matchKeys.forRequest(requestId),
     queryFn: async () => {
-      const response = await apiClient<any>(`/donor-matches/request/${requestId}`, {
+      const response = await apiClient<any>(`/donor-matches/${requestId}`, {
         method: "GET",
       });
       const matchesData =

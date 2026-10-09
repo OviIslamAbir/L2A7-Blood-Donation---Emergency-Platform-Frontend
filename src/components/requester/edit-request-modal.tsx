@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useUpdateBloodRequest } from "@/hooks/use-blood-request";
-import type { IBloodRequest, BloodGroup, Urgency } from "@/types/blood-request.type";
+import type { IBloodRequest, Urgency, IUpdateBloodRequestPayload } from "@/types/blood-request.type";
 import { X, Save, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -22,23 +22,56 @@ export default function EditRequestModal({
   const updateMutation = useUpdateBloodRequest();
 
   const [formData, setFormData] = useState({
-    patientName: request.patientName,
-    bloodGroup: request.bloodGroup,
-    units: request.units,
-    hospitalName: request.hospitalName,
-    hospitalAddress: request.hospitalAddress,
-    urgency: request.urgency,
-    neededAt: request.neededAt ? request.neededAt.split("T")[0] : "",
-    reason: request.reason || "",
+    patientName: "",
+    bloodGroup: "" as BloodGroup,
+    units: 1,
+    hospitalName: "",
+    hospitalAddress: "",
+    urgency: "NORMAL" as Urgency,
+    neededAt: "",
+    reason: "",
   });
+
+  useEffect(() => {
+    if (request) {
+      setFormData({
+        patientName: request.patientName || "",
+        bloodGroup: request.bloodGroup,
+        units: request.units || 1,
+        hospitalName: request.hospitalName || "",
+        hospitalAddress: request.hospitalAddress || "",
+        urgency: request.urgency || "NORMAL",
+        neededAt: request.neededAt
+          ? new Date(request.neededAt).toISOString().split("T")[0]
+          : "",
+        reason: request.reason || "",
+      });
+    }
+  }, [request]);
 
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    // 💡 Fix: Clean payload to match backend Zod & Prisma expectation
+    const cleanedPayload: IUpdateBloodRequestPayload = {
+      patientName: formData.patientName.trim(),
+      bloodGroup: formData.bloodGroup,
+      units: Number(formData.units),
+      hospitalName: formData.hospitalName.trim(),
+      hospitalAddress: formData.hospitalAddress.trim(),
+      urgency: formData.urgency,
+      ...(formData.neededAt && {
+        neededAt: new Date(formData.neededAt).toISOString(),
+      }),
+      ...(formData.reason?.trim() && {
+        reason: formData.reason.trim(),
+      }),
+    };
+
     updateMutation.mutate(
-      { id: request.id, payload: formData },
+      { id: request.id, payload: cleanedPayload },
       {
         onSuccess: () => {
           toast.success("Request updated successfully!");
@@ -205,3 +238,5 @@ export default function EditRequestModal({
     </div>
   );
 }
+
+type BloodGroup = IBloodRequest["bloodGroup"];
