@@ -9,7 +9,10 @@ import {
   CreditCard,
   Droplets,
   LogOut,
+  User as UserIcon,
 } from "lucide-react";
+
+import { useGetMe, useLogout } from "@/hooks/auth.hook";
 
 const NAV_ITEMS = [
   {
@@ -36,28 +39,30 @@ const NAV_ITEMS = [
 
 export default function RequesterSidebar() {
   const pathname = usePathname();
+  const { data: user } = useGetMe();
+  const { mutate: logout, isPending } = useLogout();
 
   const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    window.location.href = "/login";
+    logout();
   };
 
   return (
     <aside className="sticky top-0 flex h-screen w-64 flex-col border-r border-white/10 bg-[#0a0d14]/90 backdrop-blur-xl">
       {/* Brand Header */}
-      <div className="flex h-16 items-center gap-3 border-b border-white/5 px-6">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-red-600 to-rose-600 shadow-lg shadow-red-600/30">
-          <Droplets className="h-5 w-5 text-white" />
-        </div>
-        <div>
-          <h2 className="text-sm font-black tracking-wide text-white">
-            Blood<span className="text-red-500">Pulse</span>
-          </h2>
-          <p className="text-[10px] font-semibold text-zinc-500">
-            REQUESTER PANEL
-          </p>
-        </div>
+      <div className="flex h-16 items-center border-b border-white/5 px-6">
+        <Link href="/" className="flex items-center gap-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-red-600 to-rose-600 shadow-lg shadow-red-600/30">
+            <Droplets className="h-5 w-5 text-white" />
+          </div>
+          <div>
+            <h2 className="text-sm font-black tracking-wide text-white">
+              Blood<span className="text-red-500">Pulse</span>
+            </h2>
+            <p className="text-[10px] font-semibold text-zinc-500">
+              REQUESTER PANEL
+            </p>
+          </div>
+        </Link>
       </div>
 
       {/* Nav Menu */}
@@ -66,9 +71,12 @@ export default function RequesterSidebar() {
           Navigation
         </p>
         {NAV_ITEMS.map((item) => {
+          // Precise Active Route Matching
           const isActive =
-            pathname === item.href ||
-            (item.href !== "/requester" && pathname?.startsWith(item.href));
+            item.href === "/requester"
+              ? pathname === "/requester"
+              : pathname?.startsWith(item.href);
+
           const Icon = item.icon;
 
           return (
@@ -88,15 +96,32 @@ export default function RequesterSidebar() {
         })}
       </div>
 
-      {/* Logout Footer */}
-      <div className="border-t border-white/5 p-4">
+      {/* User Info & Logout Footer */}
+      <div className="border-t border-white/5 p-4 space-y-3">
+        {user && (
+          <div className="flex items-center gap-3 rounded-xl border border-white/5 bg-white/[0.02] p-2.5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-600/20 text-xs font-bold uppercase text-red-400 border border-red-500/20">
+              {user.name ? user.name.charAt(0) : <UserIcon className="h-4 w-4" />}
+            </div>
+            <div className="overflow-hidden">
+              <p className="truncate text-xs font-bold text-white">
+                {user.name || "Requester"}
+              </p>
+              <p className="truncate text-[10px] text-zinc-400">
+                {user.email}
+              </p>
+            </div>
+          </div>
+        )}
+
         <button
           type="button"
           onClick={handleLogout}
-          className="flex w-full items-center gap-3 rounded-xl border border-rose-500/20 bg-rose-500/10 px-3.5 py-2.5 text-xs font-bold text-rose-400 transition hover:bg-rose-500/20"
+          disabled={isPending}
+          className="flex w-full items-center gap-3 rounded-xl border border-rose-500/20 bg-rose-500/10 px-3.5 py-2.5 text-xs font-bold text-rose-400 transition hover:bg-rose-500/20 disabled:opacity-50"
         >
           <LogOut className="h-4 w-4" />
-          <span>Logout Account</span>
+          <span>{isPending ? "Logging out..." : "Logout Account"}</span>
         </button>
       </div>
     </aside>

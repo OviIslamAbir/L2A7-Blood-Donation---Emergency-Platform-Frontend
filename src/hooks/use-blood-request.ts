@@ -31,20 +31,34 @@ export const useCreateBloodRequest = () => {
   });
 };
 
-// 2. GET /blood-requests/my-requests (Get Requester's Blood Requests)
+// 2. GET /blood-requests/my-requests ( Get Requester's Blood Requests)
 export const useGetMyBloodRequests = () => {
   return useQuery({
     queryKey: bloodRequestKeys.myRequests(),
     queryFn: async () => {
-      const response = await apiClient<any>("/blood-requests/my-requests", {
+      // NOTE: check if backend endpoint is /blood-requests or /blood-requests/my-requests
+      const response = await apiClient<any>("/blood-requests", {
         method: "GET",
       });
-      return (
-        response?.requests ||
-        response?.data?.requests ||
-        response?.data ||
-        []
-      ) as IBloodRequest[];
+
+      // 1. Direct Array Response
+      if (Array.isArray(response)) {
+        return response as IBloodRequest[];
+      }
+      // 2. Standard Wrapper: { success: true, data: [...] }
+      if (Array.isArray(response?.data)) {
+        return response.data as IBloodRequest[];
+      }
+      // 3. Custom Wrapper: { requests: [...] }
+      if (Array.isArray(response?.requests)) {
+        return response.requests as IBloodRequest[];
+      }
+      // 4. Nested Wrapper: { data: { requests: [...] } }
+      if (Array.isArray(response?.data?.requests)) {
+        return response.data.requests as IBloodRequest[];
+      }
+
+      return [] as IBloodRequest[];
     },
   });
 };
