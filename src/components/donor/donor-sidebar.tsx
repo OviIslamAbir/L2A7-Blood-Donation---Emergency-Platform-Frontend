@@ -81,7 +81,7 @@ export default function DonorSidebar() {
           </div>
           <div>
             <h2 className="text-sm font-black tracking-wide text-white">
-              Blood<span className="text-red-500">Pulse</span>
+              Life<span className="text-red-500">Drop</span>
             </h2>
             <p className="text-[10px] font-semibold text-zinc-500">
               DONOR PANEL

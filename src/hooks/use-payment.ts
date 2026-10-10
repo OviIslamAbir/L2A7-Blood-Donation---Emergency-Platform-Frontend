@@ -35,3 +35,18 @@ export const useGetMyPayments = () => {
     },
   });
 };
+export const useConfirmStripePayment = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (paymentId: string) => {
+      return await apiClient<any>("/payments/stripe/confirm", {
+        method: "POST",
+        body: { paymentId },
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: paymentKeys.all });
+    },
+  });
+};
