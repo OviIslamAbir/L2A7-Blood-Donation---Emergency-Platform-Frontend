@@ -115,7 +115,7 @@ export function RegisterForm() {
             Create Account
           </h1>
           <p className="text-xs text-zinc-400">
-            Join the emergency response platform as a Patient or Hospital
+            Join the emergency response platform as an Individual or Hospital
           </p>
         </motion.div>
 

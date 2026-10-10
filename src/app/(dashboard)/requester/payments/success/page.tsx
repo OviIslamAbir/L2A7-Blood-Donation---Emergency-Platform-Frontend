@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { CheckCircle2, ArrowRight, ShieldCheck, Loader2 } from "lucide-react";
 import { useConfirmStripePayment } from "@/hooks/use-payment";
 
-export default function PaymentSuccessPage() {
+// 1️⃣ Inner content component where useSearchParams is executed
+function PaymentSuccessContent() {
   const searchParams = useSearchParams();
   const paymentId = searchParams.get("paymentId");
   const { mutate: confirmPayment, isPending } = useConfirmStripePayment();
@@ -65,5 +66,23 @@ export default function PaymentSuccessPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// 2️⃣ Exported default page wrapped in React Suspense boundary
+export default function PaymentSuccessPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-[70vh] items-center justify-center text-center">
+          <div className="flex flex-col items-center gap-3 text-zinc-400">
+            <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
+            <p className="text-xs font-semibold">Loading payment details...</p>
+          </div>
+        </div>
+      }
+    >
+      <PaymentSuccessContent />
+    </Suspense>
   );
 }

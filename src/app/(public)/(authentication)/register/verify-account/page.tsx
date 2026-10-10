@@ -1,7 +1,7 @@
 /** biome-ignore-all lint/a11y/noLabelWithoutControl: <explanation> */
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "motion/react";
 import { ShieldCheck, ArrowRight, RefreshCw, Mail } from "lucide-react";
@@ -12,7 +12,8 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { useVerifyEmail } from "@/hooks/auth.hook";
 
-export default function VerifyAccountPage() {
+// 1️⃣ inner form component where useSearchParams is consumed
+function VerifyAccountForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") ?? "";
@@ -69,12 +70,10 @@ export default function VerifyAccountPage() {
 
   return (
     <div className="relative mx-auto w-full max-w-md overflow-hidden rounded-3xl border border-white/10 bg-[#0a0d14]/85 p-6 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.6)] sm:p-8">
-      
       <div className="pointer-events-none absolute -left-20 -top-20 h-48 w-48 rounded-full bg-red-600/15 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-20 -right-20 h-48 w-48 rounded-full bg-rose-600/10 blur-3xl" />
 
       <div className="relative z-10 space-y-6">
-        
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
@@ -89,17 +88,16 @@ export default function VerifyAccountPage() {
             Verify Your Account
           </h1>
 
-          <p className="text-xs text-zinc-400 leading-relaxed">
+          <p className="text-xs leading-relaxed text-zinc-400">
             Enter the 6-digit verification code sent to
             <br />
-            <span className="inline-flex items-center gap-1.5 mt-1 font-semibold text-red-400 bg-red-500/10 px-2.5 py-0.5 rounded-full border border-red-500/20 text-xs">
+            <span className="mt-1 inline-flex items-center gap-1.5 rounded-full border border-red-500/20 bg-red-500/10 px-2.5 py-0.5 text-xs font-semibold text-red-400">
               <Mail className="h-3 w-3 shrink-0" />
               {email || "your email"}
             </span>
           </p>
         </motion.div>
 
-       
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-1.5">
             <label className="block text-center text-[11px] font-bold uppercase tracking-wider text-zinc-400">
@@ -115,7 +113,7 @@ export default function VerifyAccountPage() {
               }
               placeholder="0 0 0 0 0 0"
               aria-label="Verification code"
-              className="h-14 w-full rounded-2xl border border-white/10 bg-[#05070a]/90 text-center text-xl font-black tracking-[0.4em] text-white placeholder:text-zinc-700 placeholder:font-normal placeholder:tracking-widest transition-all duration-300 focus:border-red-500/70 focus:ring-2 focus:ring-red-500/20 focus:bg-black/80"
+              className="h-14 w-full rounded-2xl border border-white/10 bg-[#05070a]/90 text-center text-xl font-black tracking-[0.4em] text-white transition-all duration-300 placeholder:font-normal placeholder:tracking-widest placeholder:text-zinc-700 focus:border-red-500/70 focus:bg-black/80 focus:ring-2 focus:ring-red-500/20"
             />
           </div>
 
@@ -142,7 +140,6 @@ export default function VerifyAccountPage() {
           </motion.div>
         </form>
 
-    
         <div className="space-y-3 pt-2 text-center text-xs">
           <p className="text-zinc-400">
             Didn't receive the code?{" "}
@@ -168,5 +165,23 @@ export default function VerifyAccountPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// 2️⃣ Exported default page wrapped in React Suspense boundary
+export default function VerifyAccountPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-[400px] w-full items-center justify-center">
+          <div className="flex flex-col items-center gap-3 text-zinc-400">
+            <Spinner className="size-8 text-red-500" />
+            <p className="text-xs font-semibold">Loading verification page...</p>
+          </div>
+        </div>
+      }
+    >
+      <VerifyAccountForm />
+    </Suspense>
   );
 }

@@ -1,54 +1,62 @@
+export type UserRole = "ADMIN" | "DONOR" | "REQUESTER";
+export type DonorApplicationStatus = "NONE" | "PENDING" | "APPROVED" | "REJECTED";
+export type RequesterType = "PATIENT" | "HOSPITAL";
+
 export interface IRegisterPayload {
-	name: string;
-	email: string;
-	password: string;
-	requesterType?: "INDIVIDUAL" | "ORGANIZATION" | null;
+  name: string;
+  email: string;
+  password: string;
+  requesterType?: RequesterType | null;
 }
 
 export interface IVerifyEmailPayload {
-	email: string;
-	otp: string;
+  email: string;
+  otp: string;
 }
 
 export interface ILoginPayload {
-	email: string;
-	password: string;
+  email: string;
+  password: string;
 }
 
 export interface IGoogleLoginPayload {
-	idToken: string;
+  idToken: string;
 }
 
 export interface IForgotPasswordPayload {
-	email: string;
+  email: string;
 }
 
 export interface IResetPasswordPayload {
-	email: string;
-	otp: string;
-	newPassword: string;
+  email: string;
+  otp: string;
+  newPassword: string;
 }
 
 export interface IUser {
-	id: string;
-	name: string;
-	email: string;
-	role: string;
-	isActive: boolean;
-	emailVerified: boolean;
-	donorApplicationStatus: string;
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  isActive: boolean;
+  emailVerified: boolean;
+  donorApplicationStatus: DonorApplicationStatus;
+  phone?: string | null;
+  avatar?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface IAuthSuccessData {
-  role: string;
-	user: IUser;
-	accessToken: string;
-	refreshToken: string;
+  role: UserRole;
+  user: IUser;
+  accessToken: string;
+  refreshToken?: string;
 }
 
-export interface IAuthResponse<T = any> {
-	success: boolean;
-	statusCode: number;
-	message: string;
-	data: T;
+export interface IAuthResponse<T = unknown> {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: T;
 }

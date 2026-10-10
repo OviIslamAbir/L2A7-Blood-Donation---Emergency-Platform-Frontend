@@ -14,6 +14,14 @@ import type {
   IVerifyEmailPayload,
 } from "@/types/auth.type";
 
+export const authKeys = {
+  all: ["auth"] as const,
+  me: () => [...authKeys.all, "me"] as const,
+};
+
+// ======================================================
+// REGISTER MUTATION
+// ======================================================
 export const useRegister = () => {
   return useMutation({
     mutationFn: async (payload: IRegisterPayload) => {
@@ -25,7 +33,9 @@ export const useRegister = () => {
   });
 };
 
-
+// ======================================================
+// VERIFY EMAIL MUTATION
+// ======================================================
 export const useVerifyEmail = () => {
   const queryClient = useQueryClient();
 
@@ -39,15 +49,21 @@ export const useVerifyEmail = () => {
         }
       );
     },
-    onSuccess: (response) => {
+    onSuccess: async (response) => {
       if (response?.data?.accessToken) {
         localStorage.setItem("accessToken", response.data.accessToken);
-        queryClient.invalidateQueries({ queryKey: ["me"] });
+        if (response.data.refreshToken) {
+          localStorage.setItem("refreshToken", response.data.refreshToken);
+        }
+        await queryClient.refetchQueries({ queryKey: authKeys.me() });
       }
     },
   });
 };
 
+// ======================================================
+// LOGIN MUTATION
+// ======================================================
 export const useLogin = () => {
   const queryClient = useQueryClient();
 
@@ -58,16 +74,21 @@ export const useLogin = () => {
         body: payload,
       });
     },
-    onSuccess: (response) => {
+    onSuccess: async (response) => {
       if (response?.data?.accessToken) {
         localStorage.setItem("accessToken", response.data.accessToken);
-        queryClient.invalidateQueries({ queryKey: ["me"] });
+        if (response.data.refreshToken) {
+          localStorage.setItem("refreshToken", response.data.refreshToken);
+        }
+        await queryClient.refetchQueries({ queryKey: authKeys.me() });
       }
     },
   });
 };
 
-
+// ======================================================
+// GOOGLE LOGIN MUTATION
+// ======================================================
 export const useGoogleLogin = () => {
   const queryClient = useQueryClient();
 
@@ -78,16 +99,21 @@ export const useGoogleLogin = () => {
         body: payload,
       });
     },
-    onSuccess: (response) => {
+    onSuccess: async (response) => {
       if (response?.data?.accessToken) {
         localStorage.setItem("accessToken", response.data.accessToken);
-        queryClient.invalidateQueries({ queryKey: ["me"] });
+        if (response.data.refreshToken) {
+          localStorage.setItem("refreshToken", response.data.refreshToken);
+        }
+        await queryClient.refetchQueries({ queryKey: authKeys.me() });
       }
     },
   });
 };
 
-
+// ======================================================
+// FORGOT PASSWORD MUTATION
+// ======================================================
 export const useForgotPassword = () => {
   return useMutation({
     mutationFn: async (payload: IForgotPasswordPayload) => {
@@ -99,7 +125,9 @@ export const useForgotPassword = () => {
   });
 };
 
-
+// ======================================================
+// RESET PASSWORD MUTATION
+// ======================================================
 export const useResetPassword = () => {
   return useMutation({
     mutationFn: async (payload: IResetPasswordPayload) => {
@@ -111,7 +139,9 @@ export const useResetPassword = () => {
   });
 };
 
-
+// ======================================================
+// REFRESH TOKEN MUTATION
+// ======================================================
 export const useRefreshToken = () => {
   return useMutation({
     mutationFn: async () => {
@@ -130,7 +160,9 @@ export const useRefreshToken = () => {
   });
 };
 
-
+// ======================================================
+// LOGOUT MUTATION
+// ======================================================
 export const useLogout = () => {
   const queryClient = useQueryClient();
 
@@ -140,26 +172,31 @@ export const useLogout = () => {
         method: "POST",
       });
     },
-    onSuccess: () => {
+    onSettled: () => {
       localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
       queryClient.clear();
     },
   });
 };
 
+// ======================================================
+// GET ME QUERY
+// ======================================================
 export const useGetMe = () => {
   const isClient = typeof window !== "undefined";
-  const hasToken = isClient ? !!localStorage.getItem("accessToken") : false;
+  const token = isClient ? localStorage.getItem("accessToken") : null;
+  const hasToken = Boolean(token && token.trim() !== "");
 
   return useQuery({
-    queryKey: ["me"],
+    queryKey: authKeys.me(),
     queryFn: async () => {
       const response = await apiClient<IAuthResponse<IUser>>("/auth/me");
-      return response.data;
+      return response?.data || response;
     },
     enabled: hasToken,
-    staleTime: 1000 * 60 * 15,
-    gcTime: 1000 * 60 * 30,
+    staleTime: 1000 * 60 * 15, // 15 Minutes
+    gcTime: 1000 * 60 * 30, // 30 Minutes
     retry: false,
   });
 };

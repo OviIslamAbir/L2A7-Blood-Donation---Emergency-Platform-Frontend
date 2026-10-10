@@ -1,6 +1,7 @@
 import { ofetch } from "ofetch";
 
-const BASE_URL = process.env.BACKEND_URL;
+const BASE_URL = "https://blood-donation-system-puce.vercel.app/api/v1";
+
 
 export const apiClient = ofetch.create({
   baseURL: BASE_URL,
