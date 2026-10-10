@@ -40,6 +40,7 @@ export interface IUser {
 }
 
 export interface IAuthSuccessData {
+  role: string;
 	user: IUser;
 	accessToken: string;
 	refreshToken: string;

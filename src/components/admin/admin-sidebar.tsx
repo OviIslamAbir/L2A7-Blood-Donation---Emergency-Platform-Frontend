@@ -15,10 +15,13 @@ import {
   X,
   Menu,
   User as UserIcon,
+  ScrollText,
+  Bell,
 } from "lucide-react";
 import { toast } from "sonner";
 
 import { useGetMe, useLogout } from "@/hooks/auth.hook";
+import { useGetUnreadNotificationCount } from "@/hooks/use-notification";
 
 const sidebarNavItems = [
   {
@@ -41,6 +44,11 @@ const sidebarNavItems = [
     href: "/admin/blood-requests",
     icon: Droplets,
   },
+  {
+    title: "Audit Logs",
+    href: "/admin/audit-logs",
+    icon: ScrollText,
+  },
 ];
 
 export default function AdminSidebar() {
@@ -50,6 +58,7 @@ export default function AdminSidebar() {
 
   const { data: user } = useGetMe();
   const { mutate: logout, isPending } = useLogout();
+  const { data: unreadCount = 0 } = useGetUnreadNotificationCount();
 
   const handleLogout = () => {
     logout(undefined, {
@@ -100,7 +109,7 @@ export default function AdminSidebar() {
         }`}
       >
         {/* Brand Header */}
-        <div className="flex h-16 items-center border-b border-white/5 px-6">
+        <div className="flex h-16 items-center justify-between border-b border-white/5 px-6">
           <Link
             href="/"
             className="flex items-center gap-3 transition hover:opacity-90"
@@ -118,6 +127,14 @@ export default function AdminSidebar() {
               </p>
             </div>
           </Link>
+
+          {/* Unread Notification Badge */}
+          {unreadCount > 0 && (
+            <div className="flex items-center gap-1 rounded-full border border-red-500/30 bg-red-500/10 px-2 py-0.5 text-[10px] font-bold text-red-400 shadow-[0_0_12px_rgba(239,68,68,0.2)]">
+              <Bell className="h-3 w-3 animate-pulse text-red-400" />
+              <span>{unreadCount}</span>
+            </div>
+          )}
         </div>
 
         {/* Main Navigation */}

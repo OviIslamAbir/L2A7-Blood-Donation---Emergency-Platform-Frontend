@@ -10,7 +10,7 @@ import {
   ArrowRight,
   RefreshCw,
   Activity,
-  ShieldCheck,
+  ScrollText,
 } from "lucide-react";
 import { useAdminDashboard } from "@/hooks/use-admin";
 import AdminStatCard from "@/components/admin/admin-stat-card";
@@ -19,7 +19,6 @@ import AdminHeader from "@/components/admin/admin-header";
 export default function AdminDashboardPage() {
   const { data, isLoading, isError, refetch, isFetching } = useAdminDashboard();
 
-  
   const totalUsers = data?.totalUsers ?? data?.users?.total ?? 0;
   const totalDonors = data?.totalDonors ?? data?.users?.donors ?? 0;
   const totalRequesters = data?.totalRequesters ?? data?.users?.requesters ?? 0;
@@ -95,7 +94,6 @@ export default function AdminDashboardPage() {
         }
       />
 
-  
       {isLoading ? (
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {[
@@ -130,41 +128,46 @@ export default function AdminDashboardPage() {
         </div>
       ) : (
         <>
-
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {stats.map((stat) => (
               <AdminStatCard key={stat.title} {...stat} />
             ))}
           </div>
 
-
           <section className="pt-2">
             <h2 className="mb-4 text-base font-bold text-white">
               Quick Management Shortcuts
             </h2>
 
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
               {[
                 {
-                  title: "Review Donor Applications",
+                  title: "Review Applications",
                   description:
-                    "Review pending donor applications and grant verified donor roles.",
+                    "Review pending donor applications and grant verified roles.",
                   href: "/admin/donor-applications",
                   badge: `${pendingDonorApps} Pending`,
                 },
                 {
-                  title: "Manage Platform Users",
+                  title: "Manage Users",
                   description:
-                    "Search registered users, activate/deactivate accounts, or modify status.",
+                    "Search users, activate/deactivate accounts or status.",
                   href: "/admin/users",
                   badge: "User Control",
                 },
                 {
-                  title: "Verify Blood Requests",
+                  title: "Verify Requests",
                   description:
-                    "Verify emergency requests to notify matching blood donors in real-time.",
+                    "Verify emergency requests to notify matching donors.",
                   href: "/admin/blood-requests",
                   badge: "Urgent Actions",
+                },
+                {
+                  title: "System Audit Logs",
+                  description:
+                    "Track administrative actions and system security logs.",
+                  href: "/admin/audit-logs",
+                  badge: "Security",
                 },
               ].map((item) => (
                 <Link

@@ -42,6 +42,24 @@ export interface UsersQuery {
   limit?: number;
 }
 
+export interface AuditLogItem {
+  id: string;
+  userId: string;
+  action: string;
+  entity: string;
+  entityId?: string | null;
+  oldValue?: any;
+  newValue?: any;
+  ipAddress?: string | null;
+  createdAt: string;
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+  } | null;
+}
+
 export interface AuditLogsQuery {
   entity?: string;
   action?: string;
@@ -59,7 +77,6 @@ export const adminKeys = {
   bloodRequests: () => [...adminKeys.all, "blood-requests"] as const,
   auditLogs: (query: AuditLogsQuery) => [...adminKeys.all, "audit-logs", query] as const,
 };
-
 
 export const useAdminDashboard = () => {
   return useQuery({
@@ -81,7 +98,6 @@ export const useDonorApplications = () => {
   });
 };
 
-
 export const useApproveDonor = () => {
   const queryClient = useQueryClient();
 
@@ -92,7 +108,6 @@ export const useApproveDonor = () => {
       });
     },
     onSuccess: () => {
-      
       queryClient.invalidateQueries({ queryKey: adminKeys.all });
     },
   });
@@ -190,7 +205,6 @@ export const useAdminBloodRequests = () => {
   });
 };
 
-
 export const useVerifyBloodRequest = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -203,3 +217,16 @@ export const useVerifyBloodRequest = () => {
   });
 };
 
+
+export const useAuditLogs = (query: AuditLogsQuery = {}) => {
+  return useQuery({
+    queryKey: adminKeys.auditLogs(query),
+    queryFn: async () => {
+      const response = await apiClient<any>("/audit-logs", {
+        method: "GET",
+        query,
+      });
+      return response.data || response;
+    },
+  });
+};
