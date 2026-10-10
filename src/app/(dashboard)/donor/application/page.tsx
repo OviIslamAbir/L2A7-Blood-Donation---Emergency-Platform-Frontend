@@ -46,7 +46,7 @@ export default function DonorApplicationPage() {
 
   const applyMutation = useApplyForDonor();
 
-  // Form State
+  
   const [bloodGroup, setBloodGroup] = useState("O+");
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [division, setDivision] = useState("Dhaka");

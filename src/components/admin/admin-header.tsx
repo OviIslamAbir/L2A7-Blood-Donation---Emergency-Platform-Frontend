@@ -35,7 +35,6 @@ export default function AdminHeader({
       <div className="flex items-center gap-3">
         {action}
 
-        {/* 🔔 Reusable Notification Popover */}
         <NotificationPopover />
 
         <div className="h-4 w-px bg-white/10" />

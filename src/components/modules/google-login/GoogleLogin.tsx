@@ -4,7 +4,7 @@ import { GoogleLogin } from "@react-oauth/google";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
-import apiClient from "@/lib/apiClient"; // আপনার configured apiClient
+import apiClient from "@/lib/apiClient";
 
 export default function GoogleLoginComponent() {
   const router = useRouter();
@@ -19,7 +19,6 @@ export default function GoogleLoginComponent() {
     }
 
     try {
-      // Direct apiClient call pointing to Vercel Express backend (/auth/google)
       const res: any = await apiClient("/auth/google", {
         method: "POST",
         body: { idToken },
@@ -37,19 +36,26 @@ export default function GoogleLoginComponent() {
       // Save token if returned
       if (res?.data?.accessToken) {
         localStorage.setItem("accessToken", res.data.accessToken);
+        if (res.data.refreshToken) {
+          localStorage.setItem("refreshToken", res.data.refreshToken);
+        }
+        await queryClient.refetchQueries({ queryKey: ["auth", "me"] });
         queryClient.invalidateQueries({ queryKey: ["me"] });
       }
 
       toast.success("Login successful! Welcome back.");
 
-      // Dynamic Role-based Redirect
-      const role = res?.data?.user?.role;
+      // 💡 Dynamic Role-based Redirect Fix
+      const role = res?.data?.user?.role || res?.data?.role;
+
       if (role === "ADMIN") {
         router.push("/admin");
       } else if (role === "DONOR") {
         router.push("/donor");
+      } else if (role === "REQUESTER") {
+        router.push("/requester");
       } else {
-        router.push("/apply-donor");
+        router.push("/");
       }
 
       router.refresh();
@@ -65,7 +71,7 @@ export default function GoogleLoginComponent() {
   };
 
   return (
-    <div className="flex justify-center w-full">
+    <div className="flex w-full justify-center">
       <GoogleLogin
         theme="outline"
         shape="pill"

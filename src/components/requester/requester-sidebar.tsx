@@ -10,6 +10,7 @@ import {
   Droplets,
   LogOut,
   User as UserIcon,
+  UserPlus,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -36,6 +37,16 @@ const NAV_ITEMS = [
     href: "/requester/payments",
     icon: CreditCard,
   },
+  {
+    label: "Apply for Donor",
+    href: "/apply-donor",
+    icon: UserPlus,
+  },
+  {
+    label: "My Profile",
+    href: "/requester/profile",
+    icon: UserIcon,
+  },
 ];
 
 export default function RequesterSidebar() {
@@ -47,17 +58,12 @@ export default function RequesterSidebar() {
   const handleLogout = () => {
     logout(undefined, {
       onSuccess: () => {
-        
         localStorage.removeItem("accessToken");
-
         toast.success("Logged out successfully.");
-
-        
         router.push("/login");
         router.refresh();
       },
       onError: (err: any) => {
-       
         localStorage.removeItem("accessToken");
         toast.error(err?.message || "Logged out.");
         router.push("/login");
@@ -68,7 +74,6 @@ export default function RequesterSidebar() {
 
   return (
     <aside className="sticky top-0 flex h-screen w-64 flex-col border-r border-white/10 bg-[#0a0d14]/90 backdrop-blur-xl">
-      
       <div className="flex h-16 items-center border-b border-white/5 px-6">
         <Link href="/" className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-red-600 to-rose-600 shadow-lg shadow-red-600/30">
@@ -85,7 +90,7 @@ export default function RequesterSidebar() {
         </Link>
       </div>
 
-      <div className="flex-1 space-y-1 p-4">
+      <div className="flex-1 space-y-1 p-4 overflow-y-auto">
         <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-zinc-500">
           Navigation
         </p>
@@ -114,11 +119,13 @@ export default function RequesterSidebar() {
         })}
       </div>
 
-
       <div className="border-t border-white/5 p-4 space-y-3">
         {user && (
-          <div className="flex items-center gap-3 rounded-xl border border-white/5 bg-white/[0.02] p-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-600/20 text-xs font-bold uppercase text-red-400 border border-red-500/20">
+          <Link
+            href="/requester/profile"
+            className="flex items-center gap-3 rounded-xl border border-white/5 bg-white/[0.02] p-2.5 transition hover:bg-white/5 hover:border-white/10"
+          >
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-600/20 text-xs font-bold uppercase text-red-400 border border-red-500/20 shrink-0">
               {user.name ? user.name.charAt(0) : <UserIcon className="h-4 w-4" />}
             </div>
             <div className="overflow-hidden">
@@ -129,7 +136,7 @@ export default function RequesterSidebar() {
                 {user.email}
               </p>
             </div>
-          </div>
+          </Link>
         )}
 
         <button

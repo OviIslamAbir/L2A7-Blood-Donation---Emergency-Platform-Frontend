@@ -49,6 +49,11 @@ const sidebarNavItems = [
     href: "/admin/audit-logs",
     icon: ScrollText,
   },
+  {
+    title: "Admin Profile",
+    href: "/admin/profile",
+    icon: UserIcon,
+  },
 ];
 
 export default function AdminSidebar() {
@@ -138,7 +143,7 @@ export default function AdminSidebar() {
         </div>
 
         {/* Main Navigation */}
-        <div className="flex-1 space-y-1 p-4">
+        <div className="flex-1 space-y-1 p-4 overflow-y-auto">
           <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-zinc-500">
             Main Menu
           </p>
@@ -184,8 +189,12 @@ export default function AdminSidebar() {
           </Link>
 
           {user && (
-            <div className="flex items-center gap-3 rounded-xl border border-white/5 bg-white/[0.02] p-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-600/20 text-xs font-bold uppercase text-red-400 border border-red-500/20">
+            <Link
+              href="/admin/profile"
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center gap-3 rounded-xl border border-white/5 bg-white/[0.02] p-2.5 transition hover:bg-white/5 hover:border-white/10"
+            >
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-600/20 text-xs font-bold uppercase text-red-400 border border-red-500/20 shrink-0">
                 {user.name ? user.name.charAt(0) : <UserIcon className="h-4 w-4" />}
               </div>
               <div className="overflow-hidden">
@@ -196,7 +205,7 @@ export default function AdminSidebar() {
                   {user.email}
                 </p>
               </div>
-            </div>
+            </Link>
           )}
 
           <button

@@ -62,7 +62,7 @@ export default function AuditLogsPage() {
         }
       />
 
-      {/* Filters */}
+
       <div className="flex flex-wrap gap-3 rounded-2xl border border-white/10 bg-[#0a0d14]/80 p-4 backdrop-blur-xl">
         <div className="relative flex-1 min-w-[200px]">
           <Filter className="absolute left-3.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-zinc-500" />
@@ -93,7 +93,6 @@ export default function AuditLogsPage() {
         </div>
       </div>
 
-      {/* Audit Log Table */}
       <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#0a0d14]/80 backdrop-blur-xl">
         {isLoading ? (
           <div className="space-y-3 p-6">
@@ -188,7 +187,7 @@ export default function AuditLogsPage() {
           </div>
         )}
 
-        {/* Pagination Controls */}
+
         {meta.totalPages > 1 && (
           <div className="flex items-center justify-between border-t border-white/5 px-4 py-3 text-xs text-zinc-400">
             <span>
