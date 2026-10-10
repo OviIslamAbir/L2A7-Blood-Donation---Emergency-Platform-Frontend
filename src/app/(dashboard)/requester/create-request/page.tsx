@@ -23,7 +23,7 @@ export default function CreateBloodRequestPage() {
 
   const [formData, setFormData] = useState({
     patientName: "",
-    bloodGroup: "O_POSITIVE" as BloodGroup,
+    bloodGroup: "A_POSITIVE" as BloodGroup, 
     units: 1,
     hospitalName: "",
     hospitalAddress: "",
@@ -36,7 +36,14 @@ export default function CreateBloodRequestPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    createMutation.mutate(formData, {
+
+    // 💡 পে লোড নিশ্চিতকরণ
+    const payload = {
+      ...formData,
+      units: Number(formData.units),
+    };
+
+    createMutation.mutate(payload, {
       onSuccess: () => {
         toast.success("Blood Request Created Successfully!");
         router.push("/requester/my-requests");
@@ -105,7 +112,7 @@ export default function CreateBloodRequestPage() {
                 "O_POSITIVE",
                 "O_NEGATIVE",
               ].map((bg) => (
-                <option key={bg} value={bg}>
+                <option key={bg} value={bg} className="bg-[#0a0d14] text-white">
                   {bg.replace("_", " ")}
                 </option>
               ))}
@@ -182,9 +189,9 @@ export default function CreateBloodRequestPage() {
               }
               className="mt-1 w-full rounded-xl border border-white/10 bg-[#0a0d14] p-3 text-xs text-white outline-none focus:border-red-500"
             >
-              <option value="NORMAL">NORMAL</option>
-              <option value="URGENT">URGENT</option>
-              <option value="CRITICAL">CRITICAL</option>
+              <option value="NORMAL" className="bg-[#0a0d14] text-white">NORMAL</option>
+              <option value="URGENT" className="bg-[#0a0d14] text-white">URGENT</option>
+              <option value="CRITICAL" className="bg-[#0a0d14] text-white">CRITICAL</option>
             </select>
           </div>
 
