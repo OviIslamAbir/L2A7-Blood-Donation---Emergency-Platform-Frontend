@@ -23,7 +23,7 @@ export default function CreateBloodRequestPage() {
 
   const [formData, setFormData] = useState({
     patientName: "",
-    bloodGroup: "A_POSITIVE" as BloodGroup, 
+    bloodGroup: "A_POSITIVE" as BloodGroup,
     units: 1,
     hospitalName: "",
     hospitalAddress: "",
@@ -37,7 +37,6 @@ export default function CreateBloodRequestPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // 💡 পে লোড নিশ্চিতকরণ
     const payload = {
       ...formData,
       units: Number(formData.units),
@@ -49,7 +48,18 @@ export default function CreateBloodRequestPage() {
         router.push("/requester/my-requests");
       },
       onError: (err: any) => {
-        toast.error(err?.message || "Failed to create request.");
+        const errorMessage =
+          err?.data?.message || err?.message || "Failed to create request.";
+
+        if (
+          errorMessage.includes("Requester type") ||
+          errorMessage.includes("complete your profile")
+        ) {
+          toast.error("Please complete your requester profile first!");
+          router.push("/requester/profile");
+        } else {
+          toast.error(errorMessage);
+        }
       },
     });
   };

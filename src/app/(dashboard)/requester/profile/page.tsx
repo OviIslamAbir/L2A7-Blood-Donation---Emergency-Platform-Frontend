@@ -4,26 +4,27 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useGetMe } from "@/hooks/auth.hook";
+import apiClient from "@/lib/apiClient";
 import {
   User as UserIcon,
   Mail,
   ShieldCheck,
   Phone,
-  MapPin,
-  Calendar,
-  Save,
   RefreshCw,
   Sparkles,
   ArrowLeft,
   Building2,
   Home,
   Droplet,
-  CheckCircle2,
+  Save,
+  UserCheck,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function RequesterProfilePage() {
   const [isMounted, setIsMounted] = useState(false);
+  const queryClient = useQueryClient();
   const { data: user, isLoading, refetch, isFetching } = useGetMe();
 
   // Form State
@@ -31,6 +32,7 @@ export default function RequesterProfilePage() {
   const [phone, setPhone] = useState("");
   const [district, setDistrict] = useState("");
   const [address, setAddress] = useState("");
+  const [requesterType, setRequesterType] = useState<"INDIVIDUAL" | "ORGANIZATION">("INDIVIDUAL");
   const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
@@ -39,9 +41,16 @@ export default function RequesterProfilePage() {
 
   useEffect(() => {
     if (user) {
-      setName(user.name || "");
-      setPhone(user.phone || "");
-      
+      const profileUser = user as any;
+
+      setName(profileUser.name || user.name || "");
+      setPhone(profileUser.phone || user.phone || "");
+      setDistrict(profileUser.district || "");
+      setAddress(profileUser.address || "");
+
+      if (profileUser.requesterType) {
+        setRequesterType(profileUser.requesterType);
+      }
     }
   }, [user]);
 
@@ -50,17 +59,32 @@ export default function RequesterProfilePage() {
     setIsUpdating(true);
 
     try {
+      const res: any = await apiClient("/users/profile", {
+        method: "PATCH",
+        body: {
+          name,
+          phone,
+          district,
+          address,
+          requesterType,
+        },
+      });
 
-      
-      toast.success("Profile updated successfully!");
+      if (res && res.success === false) {
+        toast.error(res.message || "Failed to update profile.");
+        return;
+      }
+
+      toast.success("Profile & Requester type updated successfully!");
+      queryClient.invalidateQueries({ queryKey: ["auth", "me"] });
+      queryClient.invalidateQueries({ queryKey: ["me"] });
     } catch (err: any) {
-      toast.error(err?.message || "Failed to update profile.");
+      toast.error(err?.data?.message || err?.message || "Failed to update profile.");
     } finally {
       setIsUpdating(false);
     }
   };
 
-  // 1. Loading State
   if (!isMounted || isLoading) {
     return (
       <div className="relative min-h-screen w-full bg-black text-white flex flex-col items-center justify-center gap-4">
@@ -83,10 +107,6 @@ export default function RequesterProfilePage() {
       <div className="fixed inset-0 bg-black -z-50 pointer-events-none" />
 
       <div className="relative mx-auto max-w-4xl space-y-6">
-        {/* Background Glow Effects */}
-        <div className="pointer-events-none absolute top-0 right-10 -z-10 h-80 w-80 rounded-full bg-red-600/10 blur-[130px]" />
-        <div className="pointer-events-none absolute bottom-0 left-10 -z-10 h-80 w-80 rounded-full bg-rose-600/10 blur-[130px]" />
-
         {/* Back Navigation */}
         <div className="flex items-center justify-between">
           <Link
@@ -117,12 +137,12 @@ export default function RequesterProfilePage() {
             My Profile
           </h1>
           <p className="mt-1 text-xs sm:text-sm text-zinc-400">
-            Manage your personal information and contact details.
+            Complete your requester type and personal information to post emergency blood requests.
           </p>
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
-          {/* Left Column: Avatar & Overview */}
+          {/* Left Column */}
           <div className="md:col-span-1 space-y-4">
             <div className="rounded-3xl border border-white/10 bg-[#09090b] p-6 text-center backdrop-blur-2xl shadow-xl">
               <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-red-600/30 to-rose-600/20 border border-red-500/30 text-3xl font-black text-red-400 shadow-[0_0_30px_rgba(239,68,68,0.2)]">
@@ -135,53 +155,74 @@ export default function RequesterProfilePage() {
               <p className="text-xs text-zinc-400 truncate">{user?.email}</p>
 
               <div className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-[10px] font-bold text-emerald-400">
-                <ShieldCheck className="h-3.5 w-3.5" /> Verified Requester
-              </div>
-
-              <div className="mt-6 border-t border-white/5 pt-4 text-left text-xs space-y-2.5">
-                <div className="flex items-center justify-between text-zinc-400">
-                  <span>Role</span>
-                  <span className="font-bold text-white uppercase">{user?.role || "REQUESTER"}</span>
-                </div>
-                <div className="flex items-center justify-between text-zinc-400">
-                  <span>Account Status</span>
-                  <span className="font-bold text-emerald-400">ACTIVE</span>
-                </div>
+                <ShieldCheck className="h-3.5 w-3.5" /> Verified Account
               </div>
             </div>
           </div>
 
-          {/* Right Column: Edit Profile Form */}
+          {/* Right Column Form */}
           <div className="md:col-span-2">
             <div className="rounded-3xl border border-white/10 bg-[#09090b] p-6 sm:p-8 backdrop-blur-2xl shadow-2xl">
               <h3 className="text-sm font-bold uppercase tracking-wider text-zinc-300 mb-6 flex items-center gap-2">
                 <UserIcon className="h-4 w-4 text-red-500" />
-                Personal Information
+                Requester Credentials
               </h3>
 
               <form onSubmit={handleUpdateProfile} className="space-y-5">
+                {/* 💡 REQUIRED FIX: Requester Type Picker */}
+                <div>
+                  <label className="mb-2 block text-xs font-bold text-zinc-300 uppercase tracking-wider">
+                    Requester Type <span className="text-red-500">*</span>
+                  </label>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setRequesterType("INDIVIDUAL")}
+                      className={`flex items-center justify-center gap-2 rounded-2xl border p-3.5 text-xs font-bold transition ${
+                        requesterType === "INDIVIDUAL"
+                          ? "border-red-500 bg-red-600/20 text-white shadow-lg shadow-red-600/20"
+                          : "border-white/10 bg-black text-zinc-400 hover:border-white/20"
+                      }`}
+                    >
+                      <UserCheck className="h-4 w-4" /> Individual
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setRequesterType("ORGANIZATION")}
+                      className={`flex items-center justify-center gap-2 rounded-2xl border p-3.5 text-xs font-bold transition ${
+                        requesterType === "ORGANIZATION"
+                          ? "border-red-500 bg-red-600/20 text-white shadow-lg shadow-red-600/20"
+                          : "border-white/10 bg-black text-zinc-400 hover:border-white/20"
+                      }`}
+                    >
+                      <Building2 className="h-4 w-4" /> Organization / Club
+                    </button>
+                  </div>
+                </div>
+
                 {/* Full Name */}
                 <div>
                   <label className="mb-2 block text-xs font-bold text-zinc-300 uppercase tracking-wider">
                     Full Name
                   </label>
-                  <div className="relative rounded-2xl border border-white/10 bg-black transition focus-within:border-red-500/50">
+                  <div className="relative rounded-2xl border border-white/10 bg-black">
                     <input
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="Your full name"
-                      className="w-full rounded-2xl bg-transparent px-4 py-3.5 pl-10 text-xs text-white placeholder-zinc-600 outline-none"
+                      className="w-full rounded-2xl bg-transparent px-4 py-3.5 pl-10 text-xs text-white outline-none"
                       required
                     />
                     <UserIcon className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
                   </div>
                 </div>
 
-                {/* Email Address (Read-only) */}
+                {/* Email Address */}
                 <div>
                   <label className="mb-2 block text-xs font-bold text-zinc-300 uppercase tracking-wider">
-                    Email Address <span className="text-[10px] text-zinc-500 font-normal">(Non-editable)</span>
+                    Email Address
                   </label>
                   <div className="relative rounded-2xl border border-white/5 bg-zinc-900/50 opacity-70">
                     <input
@@ -200,13 +241,14 @@ export default function RequesterProfilePage() {
                     <label className="mb-2 block text-xs font-bold text-zinc-300 uppercase tracking-wider">
                       Phone Number
                     </label>
-                    <div className="relative rounded-2xl border border-white/10 bg-black transition focus-within:border-red-500/50">
+                    <div className="relative rounded-2xl border border-white/10 bg-black">
                       <input
                         type="text"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                         placeholder="017XXXXXXXX"
-                        className="w-full rounded-2xl bg-transparent px-4 py-3.5 pl-10 text-xs text-white placeholder-zinc-600 outline-none"
+                        className="w-full rounded-2xl bg-transparent px-4 py-3.5 pl-10 text-xs text-white outline-none"
+                        required
                       />
                       <Phone className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
                     </div>
@@ -216,13 +258,14 @@ export default function RequesterProfilePage() {
                     <label className="mb-2 block text-xs font-bold text-zinc-300 uppercase tracking-wider">
                       City / District
                     </label>
-                    <div className="relative rounded-2xl border border-white/10 bg-black transition focus-within:border-red-500/50">
+                    <div className="relative rounded-2xl border border-white/10 bg-black">
                       <input
                         type="text"
                         value={district}
                         onChange={(e) => setDistrict(e.target.value)}
-                        placeholder="e.g. Dhaka, Mirpur"
-                        className="w-full rounded-2xl bg-transparent px-4 py-3.5 pl-10 text-xs text-white placeholder-zinc-600 outline-none"
+                        placeholder="e.g. Dhaka"
+                        className="w-full rounded-2xl bg-transparent px-4 py-3.5 pl-10 text-xs text-white outline-none"
+                        required
                       />
                       <Building2 className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
                     </div>
@@ -234,34 +277,34 @@ export default function RequesterProfilePage() {
                   <label className="mb-2 block text-xs font-bold text-zinc-300 uppercase tracking-wider">
                     Full Address
                   </label>
-                  <div className="relative rounded-2xl border border-white/10 bg-black transition focus-within:border-red-500/50">
+                  <div className="relative rounded-2xl border border-white/10 bg-black">
                     <input
                       type="text"
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
                       placeholder="House #, Road #, Area..."
-                      className="w-full rounded-2xl bg-transparent px-4 py-3.5 pl-10 text-xs text-white placeholder-zinc-600 outline-none"
+                      className="w-full rounded-2xl bg-transparent px-4 py-3.5 pl-10 text-xs text-white outline-none"
+                      required
                     />
                     <Home className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
                   </div>
                 </div>
 
-                {/* Submit Button */}
                 <div className="pt-3">
                   <button
                     type="submit"
                     disabled={isUpdating}
-                    className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 px-6 py-3.5 text-xs font-bold text-white shadow-lg shadow-red-600/30 transition hover:brightness-110 disabled:opacity-50"
+                    className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 px-7 py-3.5 text-xs font-bold text-white shadow-xl shadow-red-600/30 transition hover:brightness-110 disabled:opacity-50"
                   >
                     {isUpdating ? (
                       <>
                         <RefreshCw className="h-4 w-4 animate-spin" />
-                        Updating Profile...
+                        Saving Requester Credentials...
                       </>
                     ) : (
                       <>
                         <Save className="h-4 w-4" />
-                        Save Profile Changes
+                        Save & Complete Profile
                       </>
                     )}
                   </button>
